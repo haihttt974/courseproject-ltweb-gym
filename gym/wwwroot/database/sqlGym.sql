@@ -1,542 +1,470 @@
-/*==============================================================*/
+﻿/*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
 /* Created on:     10/06/2025 12:07:11 SA                       */
 /*==============================================================*/
 
 CREATE DATABASE GYM
-go
-use GYM
-go
+GO
+USE GYM
+GO
 
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('MemberPakage') and o.name = 'FK_MEMBERPA_MEMBERPAK_MEMBER')
-alter table MemberPakage
-   drop constraint FK_MEMBERPA_MEMBERPAK_MEMBER
-go
+-- Drop foreign key constraints
+IF EXISTS (SELECT 1
+           FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+           WHERE r.fkeyid = OBJECT_ID('MemberPakage') AND o.name = 'FK_MEMBERPA_MEMBERPAK_MEMBER')
+    ALTER TABLE MemberPakage
+        DROP CONSTRAINT FK_MEMBERPA_MEMBERPAK_MEMBER
+GO
 
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('MemberPakage') and o.name = 'FK_MEMBERPA_MEMBERPAK_PACKAGE')
-alter table MemberPakage
-   drop constraint FK_MEMBERPA_MEMBERPAK_PACKAGE
-go
+IF EXISTS (SELECT 1
+           FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+           WHERE r.fkeyid = OBJECT_ID('MemberPakage') AND o.name = 'FK_MEMBERPA_MEMBERPAK_PACKAGE')
+    ALTER TABLE MemberPakage
+        DROP CONSTRAINT FK_MEMBERPA_MEMBERPAK_PACKAGE
+GO
 
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('MemberPayment') and o.name = 'FK_MEMBERPA_MEMBERPAY_MEMBER')
-alter table MemberPayment
-   drop constraint FK_MEMBERPA_MEMBERPAY_MEMBER
-go
+IF EXISTS (SELECT 1
+           FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+           WHERE r.fkeyid = OBJECT_ID('MemberPayment') AND o.name = 'FK_MEMBERPA_MEMBERPAY_MEMBER')
+    ALTER TABLE MemberPayment
+        DROP CONSTRAINT FK_MEMBERPA_MEMBERPAY_MEMBER
+GO
 
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('MemberPayment') and o.name = 'FK_MEMBERPA_MEMBERPAY_PAYMENT')
-alter table MemberPayment
-   drop constraint FK_MEMBERPA_MEMBERPAY_PAYMENT
-go
+IF EXISTS (SELECT 1
+           FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+           WHERE r.fkeyid = OBJECT_ID('MemberPayment') AND o.name = 'FK_MEMBERPA_MEMBERPAY_PAYMENT')
+    ALTER TABLE MemberPayment
+        DROP CONSTRAINT FK_MEMBERPA_MEMBERPAY_PAYMENT
+GO
 
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('MemberPayment') and o.name = 'FK_MEMBERPA_MEMBERPAY_STAFF')
-alter table MemberPayment
-   drop constraint FK_MEMBERPA_MEMBERPAY_STAFF
-go
+IF EXISTS (SELECT 1
+           FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+           WHERE r.fkeyid = OBJECT_ID('MemberPayment') AND o.name = 'FK_MEMBERPA_MEMBERPAY_STAFF')
+    ALTER TABLE MemberPayment
+        DROP CONSTRAINT FK_MEMBERPA_MEMBERPAY_STAFF
+GO
 
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('TrainingSchedule') and o.name = 'FK_TRAINING_TRAININGS_TRAINER')
-alter table TrainingSchedule
-   drop constraint FK_TRAINING_TRAININGS_TRAINER
-go
+IF EXISTS (SELECT 1
+           FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+           WHERE r.fkeyid = OBJECT_ID('TrainingSchedule') AND o.name = 'FK_TRAINING_TRAININGS_TRAINER')
+    ALTER TABLE TrainingSchedule
+        DROP CONSTRAINT FK_TRAINING_TRAININGS_TRAINER
+GO
 
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('TrainingSchedule') and o.name = 'FK_TRAINING_TRAININGS_MEMBER')
-alter table TrainingSchedule
-   drop constraint FK_TRAINING_TRAININGS_MEMBER
-go
+IF EXISTS (SELECT 1
+           FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+           WHERE r.fkeyid = OBJECT_ID('TrainingSchedule') AND o.name = 'FK_TRAINING_TRAININGS_MEMBER')
+    ALTER TABLE TrainingSchedule
+        DROP CONSTRAINT FK_TRAINING_TRAININGS_MEMBER
+GO
 
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('"User"') and o.name = 'FK_USER_INCLUDE_ROLE')
-alter table "User"
-   drop constraint FK_USER_INCLUDE_ROLE
-go
+IF EXISTS (SELECT 1
+           FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+           WHERE r.fkeyid = OBJECT_ID('"User"') AND o.name = 'FK_USER_INCLUDE_ROLE')
+    ALTER TABLE "User"
+        DROP CONSTRAINT FK_USER_INCLUDE_ROLE
+GO
 
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('UserNotification') and o.name = 'FK_USERNOTI_USERNOTIF_NOTIFICA')
-alter table UserNotification
-   drop constraint FK_USERNOTI_USERNOTIF_NOTIFICA
-go
+IF EXISTS (SELECT 1
+           FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+           WHERE r.fkeyid = OBJECT_ID('UserNotification') AND o.name = 'FK_USERNOTI_USERNOTIF_NOTIFICA')
+    ALTER TABLE UserNotification
+        DROP CONSTRAINT FK_USERNOTI_USERNOTIF_NOTIFICA
+GO
 
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('UserNotification') and o.name = 'FK_USERNOTI_USERNOTIF_USER')
-alter table UserNotification
-   drop constraint FK_USERNOTI_USERNOTIF_USER
-go
+IF EXISTS (SELECT 1
+           FROM sys.sysreferences r JOIN sys.sysobjects o ON (o.id = r.constid AND o.type = 'F')
+           WHERE r.fkeyid = OBJECT_ID('UserNotification') AND o.name = 'FK_USERNOTI_USERNOTIF_USER')
+    ALTER TABLE UserNotification
+        DROP CONSTRAINT FK_USERNOTI_USERNOTIF_USER
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('Member')
-            and   type = 'U')
-   drop table Member
-go
+-- Drop tables
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('Member') AND type = 'U')
+    DROP TABLE Member
+GO
 
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('MemberPakage')
-            and   name  = 'MemberPakage2_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index MemberPakage.MemberPakage2_FK
-go
+IF EXISTS (SELECT 1 FROM sysindexes WHERE id = OBJECT_ID('MemberPakage') AND name = 'MemberPakage2_FK' AND indid > 0 AND indid < 255)
+    DROP INDEX MemberPakage.MemberPakage2_FK
+GO
 
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('MemberPakage')
-            and   name  = 'MemberPakage_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index MemberPakage.MemberPakage_FK
-go
+IF EXISTS (SELECT 1 FROM sysindexes WHERE id = OBJECT_ID('MemberPakage') AND name = 'MemberPakage_FK' AND indid > 0 AND indid < 255)
+    DROP INDEX MemberPakage.MemberPakage_FK
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('MemberPakage')
-            and   type = 'U')
-   drop table MemberPakage
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('MemberPakage') AND type = 'U')
+    DROP TABLE MemberPakage
+GO
 
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('MemberPayment')
-            and   name  = 'MemberPayment3_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index MemberPayment.MemberPayment3_FK
-go
+IF EXISTS (SELECT 1 FROM sysindexes WHERE id = OBJECT_ID('MemberPayment') AND name = 'MemberPayment3_FK' AND indid > 0 AND indid < 255)
+    DROP INDEX MemberPayment.MemberPayment3_FK
+GO
 
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('MemberPayment')
-            and   name  = 'MemberPayment2_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index MemberPayment.MemberPayment2_FK
-go
+IF EXISTS (SELECT 1 FROM sysindexes WHERE id = OBJECT_ID('MemberPayment') AND name = 'MemberPayment2_FK' AND indid > 0 AND indid < 255)
+    DROP INDEX MemberPayment.MemberPayment2_FK
+GO
 
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('MemberPayment')
-            and   name  = 'MemberPayment_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index MemberPayment.MemberPayment_FK
-go
+IF EXISTS (SELECT 1 FROM sysindexes WHERE id = OBJECT_ID('MemberPayment') AND name = 'MemberPayment_FK' AND indid > 0 AND indid < 255)
+    DROP INDEX MemberPayment.MemberPayment_FK
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('MemberPayment')
-            and   type = 'U')
-   drop table MemberPayment
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('MemberPayment') AND type = 'U')
+    DROP TABLE MemberPayment
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('Notification')
-            and   type = 'U')
-   drop table Notification
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('Notification') AND type = 'U')
+    DROP TABLE Notification
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('Package')
-            and   type = 'U')
-   drop table Package
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('Package') AND type = 'U')
+    DROP TABLE Package
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('Payment')
-            and   type = 'U')
-   drop table Payment
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('Payment') AND type = 'U')
+    DROP TABLE Payment
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('Role')
-            and   type = 'U')
-   drop table Role
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('Role') AND type = 'U')
+    DROP TABLE Role
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('Staff')
-            and   type = 'U')
-   drop table Staff
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('Staff') AND type = 'U')
+    DROP TABLE Staff
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('Trainer')
-            and   type = 'U')
-   drop table Trainer
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('Trainer') AND type = 'U')
+    DROP TABLE Trainer
+GO
 
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('TrainingSchedule')
-            and   name  = 'TrainingSchedule2_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index TrainingSchedule.TrainingSchedule2_FK
-go
+IF EXISTS (SELECT 1 FROM sysindexes WHERE id = OBJECT_ID('TrainingSchedule') AND name = 'TrainingSchedule2_FK' AND indid > 0 AND indid < 255)
+    DROP INDEX TrainingSchedule.TrainingSchedule2_FK
+GO
 
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('TrainingSchedule')
-            and   name  = 'TrainingSchedule_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index TrainingSchedule.TrainingSchedule_FK
-go
+IF EXISTS (SELECT 1 FROM sysindexes WHERE id = OBJECT_ID('TrainingSchedule') AND name = 'TrainingSchedule_FK' AND indid > 0 AND indid < 255)
+    DROP INDEX TrainingSchedule.TrainingSchedule_FK
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('TrainingSchedule')
-            and   type = 'U')
-   drop table TrainingSchedule
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('TrainingSchedule') AND type = 'U')
+    DROP TABLE TrainingSchedule
+GO
 
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('"User"')
-            and   name  = 'include_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index "User".include_FK
-go
+IF EXISTS (SELECT 1 FROM sysindexes WHERE id = OBJECT_ID('"User"') AND name = 'include_FK' AND indid > 0 AND indid < 255)
+    DROP INDEX "User".include_FK
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('"User"')
-            and   type = 'U')
-   drop table "User"
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('"User"') AND type = 'U')
+    DROP TABLE "User"
+GO
 
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('UserNotification')
-            and   name  = 'UserNotification2_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index UserNotification.UserNotification2_FK
-go
+IF EXISTS (SELECT 1 FROM sysindexes WHERE id = OBJECT_ID('UserNotification') AND name = 'UserNotification2_FK' AND indid > 0 AND indid < 255)
+    DROP INDEX UserNotification.UserNotification2_FK
+GO
 
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('UserNotification')
-            and   name  = 'UserNotification_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index UserNotification.UserNotification_FK
-go
+IF EXISTS (SELECT 1 FROM sysindexes WHERE id = OBJECT_ID('UserNotification') AND name = 'UserNotification_FK' AND indid > 0 AND indid < 255)
+    DROP INDEX UserNotification.UserNotification_FK
+GO
 
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('UserNotification')
-            and   type = 'U')
-   drop table UserNotification
-go
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID('UserNotification') AND type = 'U')
+    DROP TABLE UserNotification
+GO
 
 /*==============================================================*/
 /* Table: Member                                                */
 /*==============================================================*/
-create table Member (
-   memberId             int                  not null,
-   fullName             text                 null,
-   dateOfBirth          datetime             null,
-   sex                  bit                  null,
-   phone                text                 null,
-   address              text                 null,
-   createDate           datetime             null,
-   constraint PK_MEMBER primary key nonclustered (memberId)
+CREATE TABLE Member (
+    memberId INT NOT NULL IDENTITY(1,1),
+    fullName TEXT NULL,
+    dateOfBirth DATETIME NULL,
+    sex BIT NULL,
+    phone TEXT NULL,
+    address TEXT NULL,
+    createDate DATETIME NULL,
+    CONSTRAINT PK_MEMBER PRIMARY KEY NONCLUSTERED (memberId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: MemberPakage                                          */
 /*==============================================================*/
-create table MemberPakage (
-   memberId             int                  not null,
-   packageId            int                  not null,
-   startDate            datetime             null,
-   endDate              datetime             null,
-   isPaid               bit                  null,
-   isActive             bit                  null,
-   constraint PK_MEMBERPAKAGE primary key (memberId, packageId)
+CREATE TABLE MemberPakage (
+    memberId INT NOT NULL,
+    packageId INT NOT NULL,
+    startDate DATETIME NULL,
+    endDate DATETIME NULL,
+    isPaid BIT NULL,
+    isActive BIT NULL,
+    CONSTRAINT PK_MEMBERPAKAGE PRIMARY KEY (memberId, packageId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Index: MemberPakage_FK                                       */
 /*==============================================================*/
-create index MemberPakage_FK on MemberPakage (
-memberId ASC
+CREATE INDEX MemberPakage_FK ON MemberPakage (
+    memberId ASC
 )
-go
+GO
 
 /*==============================================================*/
 /* Index: MemberPakage2_FK                                      */
 /*==============================================================*/
-create index MemberPakage2_FK on MemberPakage (
-packageId ASC
+CREATE INDEX MemberPakage2_FK ON MemberPakage (
+    packageId ASC
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: MemberPayment                                         */
 /*==============================================================*/
-create table MemberPayment (
-   memberId             int                  not null,
-   paymentId            int                  not null,
-   staffId              int                  not null,
-   paymentDate          datetime             null,
-   constraint PK_MEMBERPAYMENT primary key (memberId, paymentId, staffId)
+CREATE TABLE MemberPayment (
+    memberId INT NOT NULL,
+    paymentId INT NOT NULL,
+    staffId INT NOT NULL,
+    paymentDate DATETIME NULL,
+    CONSTRAINT PK_MEMBERPAYMENT PRIMARY KEY (memberId, paymentId, staffId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Index: MemberPayment_FK                                      */
 /*==============================================================*/
-create index MemberPayment_FK on MemberPayment (
-memberId ASC
+CREATE INDEX MemberPayment_FK ON MemberPayment (
+    memberId ASC
 )
-go
+GO
 
 /*==============================================================*/
 /* Index: MemberPayment2_FK                                     */
 /*==============================================================*/
-create index MemberPayment2_FK on MemberPayment (
-paymentId ASC
+CREATE INDEX MemberPayment2_FK ON MemberPayment (
+    paymentId ASC
 )
-go
+GO
 
 /*==============================================================*/
 /* Index: MemberPayment3_FK                                     */
 /*==============================================================*/
-create index MemberPayment3_FK on MemberPayment (
-staffId ASC
+CREATE INDEX MemberPayment3_FK ON MemberPayment (
+    staffId ASC
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: Notification                                          */
 /*==============================================================*/
-create table Notification (
-   notificationId       int                  not null,
-   title                text                 null,
-   content              text                 null,
-   createdAt            datetime             null,
-   sendRole             text                 null,
-   constraint PK_NOTIFICATION primary key nonclustered (notificationId)
+CREATE TABLE Notification (
+    notificationId INT NOT NULL IDENTITY(1,1),
+    title TEXT NULL,
+    content TEXT NULL,
+    createdAt DATETIME NULL,
+    sendRole TEXT NULL,
+    CONSTRAINT PK_NOTIFICATION PRIMARY KEY NONCLUSTERED (notificationId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: Package                                               */
 /*==============================================================*/
-create table Package (
-   packageId            int                  not null,
-   name                 text                 null,
-   type                 text                 null,
-   price                decimal(10,2)        null,
-   durationInDays       int                  null,
-   description          text                 null,
-   constraint PK_PACKAGE primary key nonclustered (packageId)
+CREATE TABLE Package (
+    packageId INT NOT NULL IDENTITY(1,1),
+    name TEXT NULL,
+    type TEXT NULL,
+    price DECIMAL(10,2) NULL,
+    durationInDays INT NULL,
+    description TEXT NULL,
+    CONSTRAINT PK_PACKAGE PRIMARY KEY NONCLUSTERED (packageId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: Payment                                               */
 /*==============================================================*/
-create table Payment (
-   paymentId            int                  not null,
-   amount               decimal(10,2)        null,
-   method               text                 null,
-   constraint PK_PAYMENT primary key nonclustered (paymentId)
+CREATE TABLE Payment (
+    paymentId INT NOT NULL IDENTITY(1,1),
+    amount DECIMAL(10,2) NULL,
+    method TEXT NULL,
+    CONSTRAINT PK_PAYMENT PRIMARY KEY NONCLUSTERED (paymentId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: Role                                                  */
 /*==============================================================*/
-create table Role (
-   roleId               int                  not null,
-   roleName             text                 null,
-   description          text                 null,
-   constraint PK_ROLE primary key nonclustered (roleId)
+CREATE TABLE Role (
+    roleId INT NOT NULL IDENTITY(1,1),
+    roleName TEXT NULL,
+    description TEXT NULL,
+    CONSTRAINT PK_ROLE PRIMARY KEY NONCLUSTERED (roleId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: Staff                                                 */
 /*==============================================================*/
-create table Staff (
-   staffId              int                  not null,
-   fullName             text                 null,
-   phone                text                 null,
-   email                text                 null,
-   workingSince         datetime             null,
-   constraint PK_STAFF primary key nonclustered (staffId)
+CREATE TABLE Staff (
+    staffId INT NOT NULL IDENTITY(1,1),
+    fullName TEXT NULL,
+    phone TEXT NULL,
+    email TEXT NULL,
+    workingSince DATETIME NULL,
+    CONSTRAINT PK_STAFF PRIMARY KEY NONCLUSTERED (staffId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: Trainer                                               */
 /*==============================================================*/
-create table Trainer (
-   trainerId            int                  not null,
-   fullName             text                 null,
-   phone                text                 null,
-   specialty            text                 null,
-   scheduleNote         text                 null,
-   constraint PK_TRAINER primary key nonclustered (trainerId)
+CREATE TABLE Trainer (
+    trainerId INT NOT NULL IDENTITY(1,1),
+    fullName TEXT NULL,
+    phone TEXT NULL,
+    specialty TEXT NULL,
+    scheduleNote TEXT NULL,
+    CONSTRAINT PK_TRAINER PRIMARY KEY NONCLUSTERED (trainerId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: TrainingSchedule                                      */
 /*==============================================================*/
-create table TrainingSchedule (
-   trainerId            int                  not null,
-   memberId             int                  not null,
-   trainingDate         datetime             null,
-   startTime            datetime             null,
-   endTime              datetime             null,
-   node                 text                 null,
-   constraint PK_TRAININGSCHEDULE primary key (trainerId, memberId)
+CREATE TABLE TrainingSchedule (
+    trainerId INT NOT NULL,
+    memberId INT NOT NULL,
+    trainingDate DATETIME NULL,
+    startTime DATETIME NULL,
+    endTime DATETIME NULL,
+    node TEXT NULL,
+    CONSTRAINT PK_TRAININGSCHEDULE PRIMARY KEY (trainerId, memberId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Index: TrainingSchedule_FK                                   */
 /*==============================================================*/
-create index TrainingSchedule_FK on TrainingSchedule (
-trainerId ASC
+CREATE INDEX TrainingSchedule_FK ON TrainingSchedule (
+    trainerId ASC
 )
-go
+GO
 
 /*==============================================================*/
-/* Index: TrainingSchedule2_FK                                  */
+/* Index: TreatmentSchedule2_FK                                  */
 /*==============================================================*/
-create index TrainingSchedule2_FK on TrainingSchedule (
-memberId ASC
+CREATE INDEX TrainingSchedule2_FK ON TrainingSchedule (
+    memberId ASC
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: "User"                                                */
 /*==============================================================*/
-create table "User" (
-   userId               int                  not null,
-   roleId               int                  not null,
-   userName             text                 null,
-   password             text                 null,
-   email                text                 null,
-   referenceId          int                  null,
-   status               char(10)             null,
-   isAtive              bit                  null,
-   constraint PK_USER primary key nonclustered (userId)
+CREATE TABLE "User" (
+    userId INT NOT NULL IDENTITY(1,1),
+    roleId INT NOT NULL,
+    userName TEXT NULL,
+    password TEXT NULL,
+    email TEXT NULL,
+    referenceId INT NULL,
+    status CHAR(10) NULL,
+    isAtive BIT NULL,
+    CONSTRAINT PK_USER PRIMARY KEY NONCLUSTERED (userId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Index: include_FK                                            */
 /*==============================================================*/
-create index include_FK on "User" (
-roleId ASC
+CREATE INDEX include_FK ON "User" (
+    roleId ASC
 )
-go
+GO
 
 /*==============================================================*/
 /* Table: UserNotification                                      */
 /*==============================================================*/
-create table UserNotification (
-   notificationId       int                  not null,
-   userId               int                  not null,
-   timeSend             datetime             null,
-   seen                 bit                  null,
-   constraint PK_USERNOTIFICATION primary key (notificationId, userId)
+CREATE TABLE UserNotification (
+    notificationId INT NOT NULL,
+    userId INT NOT NULL,
+    timeSend DATETIME NULL,
+    seen BIT NULL,
+    CONSTRAINT PK_USERNOTIFICATION PRIMARY KEY (notificationId, userId)
 )
-go
+GO
 
 /*==============================================================*/
 /* Index: UserNotification_FK                                   */
 /*==============================================================*/
-create index UserNotification_FK on UserNotification (
-notificationId ASC
+CREATE INDEX UserNotification_FK ON UserNotification (
+    notificationId ASC
 )
-go
+GO
 
 /*==============================================================*/
 /* Index: UserNotification2_FK                                  */
 /*==============================================================*/
-create index UserNotification2_FK on UserNotification (
-userId ASC
+CREATE INDEX UserNotification2_FK ON UserNotification (
+    userId ASC
 )
-go
+GO
 
-alter table MemberPakage
-   add constraint FK_MEMBERPA_MEMBERPAK_MEMBER foreign key (memberId)
-      references Member (memberId)
-go
+-- Add foreign key constraints
+ALTER TABLE MemberPakage
+    ADD CONSTRAINT FK_MEMBERPA_MEMBERPAK_MEMBER FOREIGN KEY (memberId)
+        REFERENCES Member (memberId)
+GO
 
-alter table MemberPakage
-   add constraint FK_MEMBERPA_MEMBERPAK_PACKAGE foreign key (packageId)
-      references Package (packageId)
-go
+ALTER TABLE MemberPakage
+    ADD CONSTRAINT FK_MEMBERPA_MEMBERPAK_PACKAGE FOREIGN KEY (packageId)
+        REFERENCES Package (packageId)
+GO
 
-alter table MemberPayment
-   add constraint FK_MEMBERPA_MEMBERPAY_MEMBER foreign key (memberId)
-      references Member (memberId)
-go
+ALTER TABLE MemberPayment
+    ADD CONSTRAINT FK_MEMBERPA_MEMBERPAY_MEMBER FOREIGN KEY (memberId)
+        REFERENCES Member (memberId)
+GO
 
-alter table MemberPayment
-   add constraint FK_MEMBERPA_MEMBERPAY_PAYMENT foreign key (paymentId)
-      references Payment (paymentId)
-go
+ALTER TABLE MemberPayment
+    ADD CONSTRAINT FK_MEMBERPA_MEMBERPAY_PAYMENT FOREIGN KEY (paymentId)
+        REFERENCES Payment (paymentId)
+GO
 
-alter table MemberPayment
-   add constraint FK_MEMBERPA_MEMBERPAY_STAFF foreign key (staffId)
-      references Staff (staffId)
-go
+ALTER TABLE MemberPayment
+    ADD CONSTRAINT FK_MEMBERPA_MEMBERPAY_STAFF FOREIGN KEY (staffId)
+        REFERENCES Staff (staffId)
+GO
 
-alter table TrainingSchedule
-   add constraint FK_TRAINING_TRAININGS_TRAINER foreign key (trainerId)
-      references Trainer (trainerId)
-go
+ALTER TABLE TrainingSchedule
+    ADD CONSTRAINT FK_TRAINING_TRAININGS_TRAINER FOREIGN KEY (trainerId)
+        REFERENCES Trainer (trainerId)
+GO
 
-alter table TrainingSchedule
-   add constraint FK_TRAINING_TRAININGS_MEMBER foreign key (memberId)
-      references Member (memberId)
-go
+ALTER TABLE TrainingSchedule
+    ADD CONSTRAINT FK_TRAINING_TRAININGS_MEMBER FOREIGN KEY (memberId)
+        REFERENCES Member (memberId)
+GO
 
-alter table "User"
-   add constraint FK_USER_INCLUDE_ROLE foreign key (roleId)
-      references Role (roleId)
-go
+ALTER TABLE "User"
+    ADD CONSTRAINT FK_USER_INCLUDE_ROLE FOREIGN KEY (roleId)
+        REFERENCES Role (roleId)
+GO
 
-alter table UserNotification
-   add constraint FK_USERNOTI_USERNOTIF_NOTIFICA foreign key (notificationId)
-      references Notification (notificationId)
-go
+ALTER TABLE UserNotification
+    ADD CONSTRAINT FK_USERNOTI_USERNOTIF_NOTIFICA FOREIGN KEY (notificationId)
+        REFERENCES Notification (notificationId)
+GO
 
-alter table UserNotification
-   add constraint FK_USERNOTI_USERNOTIF_USER foreign key (userId)
-      references "User" (userId)
-go
+ALTER TABLE UserNotification
+    ADD CONSTRAINT FK_USERNOTI_USERNOTIF_USER FOREIGN KEY (userId)
+        REFERENCES "User" (userId)
+GO
 
+/*==============================================================*/
+/*                            INSERT                            */
+/*==============================================================*/
+
+
+INSERT INTO [GYM].[dbo].[Role] ([roleName], [description])
+VALUES 
+    ('Admin', 'Người quản trị hệ thống, có toàn quyền quản lý'),
+    ('Member', 'Hội viên sử dụng dịch vụ phòng gym'),
+    ('Staff', 'Nhân viên hỗ trợ và chăm sóc khách hàng'),
+    ('Trainer', 'Huấn luyện viên hướng dẫn hội viên');
