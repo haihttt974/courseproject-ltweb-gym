@@ -173,11 +173,11 @@ GO
 /*==============================================================*/
 CREATE TABLE Member (
     memberId INT NOT NULL IDENTITY(1,1),
-    fullName TEXT NULL,
+    fullName NVARCHAR(255) NULL,
     dateOfBirth DATETIME NULL,
     sex BIT NULL,
-    phone TEXT NULL,
-    address TEXT NULL,
+    phone CHAR(10) NULL,
+    address NVARCHAR(255) NULL,
     createDate DATETIME NULL,
     CONSTRAINT PK_MEMBER PRIMARY KEY NONCLUSTERED (memberId)
 )
@@ -254,10 +254,10 @@ GO
 /*==============================================================*/
 CREATE TABLE Notification (
     notificationId INT NOT NULL IDENTITY(1,1),
-    title TEXT NULL,
-    content TEXT NULL,
+    title NVARCHAR(255) NULL,
+    content NVARCHAR(255) NULL,
     createdAt DATETIME NULL,
-    sendRole TEXT NULL,
+    sendRole INT NULL,
     CONSTRAINT PK_NOTIFICATION PRIMARY KEY NONCLUSTERED (notificationId)
 )
 GO
@@ -267,11 +267,11 @@ GO
 /*==============================================================*/
 CREATE TABLE Package (
     packageId INT NOT NULL IDENTITY(1,1),
-    name TEXT NULL,
-    type TEXT NULL,
+    name NVARCHAR(255) NULL,
+    type NVARCHAR(100) NULL,
     price DECIMAL(10,2) NULL,
     durationInDays INT NULL,
-    description TEXT NULL,
+    description NVARCHAR(255) NULL,
     CONSTRAINT PK_PACKAGE PRIMARY KEY NONCLUSTERED (packageId)
 )
 GO
@@ -282,7 +282,7 @@ GO
 CREATE TABLE Payment (
     paymentId INT NOT NULL IDENTITY(1,1),
     amount DECIMAL(10,2) NULL,
-    method TEXT NULL,
+    method NVARCHAR(100) NULL,
     CONSTRAINT PK_PAYMENT PRIMARY KEY NONCLUSTERED (paymentId)
 )
 GO
@@ -292,8 +292,8 @@ GO
 /*==============================================================*/
 CREATE TABLE Role (
     roleId INT NOT NULL IDENTITY(1,1),
-    roleName TEXT NULL,
-    description TEXT NULL,
+    roleName NVARCHAR(255) NULL,
+    description NVARCHAR(255) NULL,
     CONSTRAINT PK_ROLE PRIMARY KEY NONCLUSTERED (roleId)
 )
 GO
@@ -303,9 +303,9 @@ GO
 /*==============================================================*/
 CREATE TABLE Staff (
     staffId INT NOT NULL IDENTITY(1,1),
-    fullName TEXT NULL,
-    phone TEXT NULL,
-    email TEXT NULL,
+    fullName NVARCHAR(255) NULL,
+    phone CHAR(10) NULL,
+    email NVARCHAR(100) NULL,
     workingSince DATETIME NULL,
     CONSTRAINT PK_STAFF PRIMARY KEY NONCLUSTERED (staffId)
 )
@@ -316,10 +316,10 @@ GO
 /*==============================================================*/
 CREATE TABLE Trainer (
     trainerId INT NOT NULL IDENTITY(1,1),
-    fullName TEXT NULL,
-    phone TEXT NULL,
-    specialty TEXT NULL,
-    scheduleNote TEXT NULL,
+    fullName NVARCHAR(255) NULL,
+    phone CHAR(10) NULL,
+    specialty NVARCHAR(255) NULL,
+    scheduleNote NVARCHAR(255) NULL,
     CONSTRAINT PK_TRAINER PRIMARY KEY NONCLUSTERED (trainerId)
 )
 GO
@@ -333,7 +333,7 @@ CREATE TABLE TrainingSchedule (
     trainingDate DATETIME NULL,
     startTime DATETIME NULL,
     endTime DATETIME NULL,
-    node TEXT NULL,
+    node NVARCHAR(255) NULL,
     CONSTRAINT PK_TRAININGSCHEDULE PRIMARY KEY (trainerId, memberId)
 )
 GO
@@ -360,11 +360,11 @@ GO
 CREATE TABLE "User" (
     userId INT NOT NULL IDENTITY(1,1),
     roleId INT NOT NULL,
-    userName TEXT NULL,
-    password TEXT NULL,
-    email TEXT NULL,
+    userName NVARCHAR(100) NULL,
+    password NVARCHAR(100) NULL,
+    email NVARCHAR(100) NULL,
     referenceId INT NULL,
-    status CHAR(10) NULL,
+    status NVARCHAR(255) NULL,
     isAtive BIT NULL,
     CONSTRAINT PK_USER PRIMARY KEY NONCLUSTERED (userId)
 )
@@ -464,7 +464,104 @@ GO
 
 INSERT INTO [GYM].[dbo].[Role] ([roleName], [description])
 VALUES 
-    ('Admin', 'Người quản trị hệ thống, có toàn quyền quản lý'),
-    ('Member', 'Hội viên sử dụng dịch vụ phòng gym'),
-    ('Staff', 'Nhân viên hỗ trợ và chăm sóc khách hàng'),
-    ('Trainer', 'Huấn luyện viên hướng dẫn hội viên');
+    ('Admin', N'Người quản trị hệ thống, có toàn quyền quản lý'),
+    ('Member', N'Hội viên sử dụng dịch vụ phòng gym'),
+    ('Staff', N'Nhân viên hỗ trợ và chăm sóc khách hàng'),
+    ('Trainer', N'Huấn luyện viên hướng dẫn hội viên');
+go
+
+INSERT INTO [GYM].[dbo].[User] ([roleId], [userName], [password], [email], [referenceId], [status], [isAtive])
+VALUES 
+    -- Admin
+    (1, N'admin', '$2y$10$3jeviuH6Nf.xKkqe3peQMeydzoILnoCa/LljFvZTiJPAzayhrkfue', N'nguyen.admin@gym.com', NULL, N'Hoạt động', 1), -- pass: admin
+    -- Members pass=1
+    (2, N'nguyenvanan', '$2y$10$RxDmO1pLo.adx9dJ.dhZV.PPOkchXpKe0UB79E9Koact204jdFZqq', N'nguyenvanan@gmail.com', 1, N'Hoạt động', 1),
+    (2, N'tranthiminh', '$2y$10$RxDmO1pLo.adx9dJ.dhZV.PPOkchXpKe0UB79E9Koact204jdFZqq', N'tranthiminh@gmail.com', 2, N'Hoạt động', 1),
+    (2, N'phamvanquang', '$2y$10$RxDmO1pLo.adx9dJ.dhZV.PPOkchXpKe0UB79E9Koact204jdFZqq', N'phamvanquang@gmail.com', 3, N'Hoạt động', 1),
+    (2, N'lethithuy', '$2y$10$RxDmO1pLo.adx9dJ.dhZV.PPOkchXpKe0UB79E9Koact204jdFZqq', N'lethithuy@gmail.com', 4, N'Hoạt động', 1),
+    (2, N'hovanlong', '$2y$10$RxDmO1pLo.adx9dJ.dhZV.PPOkchXpKe0UB79E9Koact204jdFZqq', N'hovanlong@gmail.com', 5, N'Hoạt động', 1),
+    (2, N'vuongthihuong', '$2y$10$RxDmO1pLo.adx9dJ.dhZV.PPOkchXpKe0UB79E9Koact204jdFZqq', N'vuongthihuong@gmail.com', 6, N'Hoạt động', 1),
+    (2, N'dangvanduc', '$2y$10$RxDmO1pLo.adx9dJ.dhZV.PPOkchXpKe0UB79E9Koact204jdFZqq', N'dangvanduc@gmail.com', 7, N'Hoạt động', 1),
+    (2, N'dothilan', '$2y$10$RxDmO1pLo.adx9dJ.dhZV.PPOkchXpKe0UB79E9Koact204jdFZqq', N'dothilan@gmail.com', 8, N'Hoạt động', 1),
+    (2, N'trunghoang', '$2y$10$RxDmO1pLo.adx9dJ.dhZV.PPOkchXpKe0UB79E9Koact204jdFZqq', N'trunghoang@gmail.com', 9, N'Hoạt động', 1),
+    (2, N'buithiphuong', '$2y$10$RxDmO1pLo.adx9dJ.dhZV.PPOkchXpKe0UB79E9Koact204jdFZqq', N'buithiphuong@gmail.com', 10, N'Hoạt động', 1),
+    -- Staff pass=2
+    (3, N'nguyenhoangnam', '$2y$10$3ARFYYBFnrAdY6KxsVmeuezkaUvffFfYpIGhu1Qtebzqt4t6uuOUu', N'nguyenhoangnam@gmail.com', 1, N'Hoạt động', 1),
+    (3, N'tranthihong', '$2y$10$3ARFYYBFnrAdY6KxsVmeuezkaUvffFfYpIGhu1Qtebzqt4t6uuOUu', N'tranthihong@gmail.com', 2, N'Hoạt động', 1),
+    (3, N'phamducthanh', '$2y$10$3ARFYYBFnrAdY6KxsVmeuezkaUvffFfYpIGhu1Qtebzqt4t6uuOUu', N'phamducthanh@gmail.com', 3, N'Hoạt động', 1),
+    (3, N'leminhhieu', '$2y$10$3ARFYYBFnrAdY6KxsVmeuezkaUvffFfYpIGhu1Qtebzqt4t6uuOUu', N'leminhhieu@gmail.com', 4, N'Hoạt động', 1),
+    (3, N'hothithanh', '$2y$10$3ARFYYBFnrAdY6KxsVmeuezkaUvffFfYpIGhu1Qtebzqt4t6uuOUu', N'hothithanh@gmail.com', 5, N'Hoạt động', 1),
+    (3, N'vuquocbao', '$2y$10$3ARFYYBFnrAdY6KxsVmeuezkaUvffFfYpIGhu1Qtebzqt4t6uuOUu', N'vuquocbao@gmail.com', 6, N'Hoạt động', 1),
+    (3, N'dangthimai', '$2y$10$3ARFYYBFnrAdY6KxsVmeuezkaUvffFfYpIGhu1Qtebzqt4t6uuOUu', N'dangthimai@gmail.com', 7, N'Hoạt động', 1),
+    (3, N'dovanthang', '$2y$10$3ARFYYBFnrAdY6KxsVmeuezkaUvffFfYpIGhu1Qtebzqt4t6uuOUu', N'dovanthang@gmail.com', 8, N'Hoạt động', 1),
+    (3, N'trinhthihuong', '$2y$10$3ARFYYBFnrAdY6KxsVmeuezkaUvffFfYpIGhu1Qtebzqt4t6uuOUu', N'trinhthihuong@gmail.com', 9, N'Hoạt động', 1),
+    (3, N'buiduchai', '$2y$10$3ARFYYBFnrAdY6KxsVmeuezkaUvffFfYpIGhu1Qtebzqt4t6uuOUu', N'buiduchai@gmail.com', 10, N'Hoạt động', 1),
+    -- Trainers pass=3
+    (4, N'nguyenvanloc', '$2a$12$Ib.I1uVGS6Dbv26wy24vSOEjOFKN9jjgVtx1.XuxPTMlU1Nh6y6yS', N'nguyenvanloc@gmail.com', 1, N'Hoạt động', 1),
+    (4, N'tranthilinh', '$2a$12$Ib.I1uVGS6Dbv26wy24vSOEjOFKN9jjgVtx1.XuxPTMlU1Nh6y6yS', N'tranthilinh@gmail.com', 2, N'Hoạt động', 1),
+    (4, N'phamvanthien', '$2a$12$Ib.I1uVGS6Dbv26wy24vSOEjOFKN9jjgVtx1.XuxPTMlU1Nh6y6yS', N'phamvanthien@gmail.com', 3, N'Hoạt động', 1),
+    (4, N'lethithao', '$2a$12$Ib.I1uVGS6Dbv26wy24vSOEjOFKN9jjgVtx1.XuxPTMlU1Nh6y6yS', N'lethithao@gmail.com', 4, N'Hoạt động', 1),
+    (4, N'hovankhoi', '$2a$12$Ib.I1uVGS6Dbv26wy24vSOEjOFKN9jjgVtx1.XuxPTMlU1Nh6y6yS', N'hovankhoi@gmail.com', 5, N'Hoạt động', 1),
+    (4, N'vuongductuan', '$2a$12$Ib.I1uVGS6Dbv26wy24vSOEjOFKN9jjgVtx1.XuxPTMlU1Nh6y6yS', N'vuongductuan@gmail.com', 6, N'Hoạt động', 1),
+    (4, N'dangthian', '$2a$12$Ib.I1uVGS6Dbv26wy24vSOEjOFKN9jjgVtx1.XuxPTMlU1Nh6y6yS', N'dangthian@gmail.com', 7, N'Hoạt động', 1),
+    (4, N'dothithuy', '$2a$12$Ib.I1uVGS6Dbv26wy24vSOEjOFKN9jjgVtx1.XuxPTMlU1Nh6y6yS', N'dothithuy@gmail.com', 8, N'Hoạt động', 1),
+    (4, N'trunghoangphi', '$2a$12$Ib.I1uVGS6Dbv26wy24vSOEjOFKN9jjgVtx1.XuxPTMlU1Nh6y6yS', N'trunghoangphi@gmail.com', 9, N'Hoạt động', 1),
+    (4, N'buithiphuong', '$2a$12$Ib.I1uVGS6Dbv26wy24vSOEjOFKN9jjgVtx1.XuxPTMlU1Nh6y6yS', N'buithiphuong@gmail.com', 10, N'Hoạt động', 1);
+
+go
+INSERT INTO [GYM].[dbo].[Member] ([fullName], [dateOfBirth], [sex], [phone], [address], [createDate])
+VALUES 
+    (N'Nguyễn Văn An', '1995-03-15 00:00:00', 1, '0912345678', N'123 Đường Láng, Hà Nội', '2025-06-01 00:00:00'),
+    (N'Trần Thị Minh', '1998-07-22 00:00:00', 0, '0987654321', N'456 Cầu Giấy, Hà Nội', '2025-06-02 00:00:00'),
+    (N'Phạm Văn Quang', '1993-11-10 00:00:00', 1, '0901234567', N'789 Nguyễn Trãi, Hà Nội', '2025-06-03 00:00:00'),
+    (N'Lê Thị Thủy', '1997-05-18 00:00:00', 0, '0923456789', N'101 Hoàng Cầu, Hà Nội', '2025-06-04 00:00:00'),
+    (N'Hồ Văn Long', '1994-09-25 00:00:00', 1, '0934567890', N'234 Kim Mã, Hà Nội', '2025-06-05 00:00:00'),
+    (N'Vương Thị Hương', '1999-02-14 00:00:00', 0, '0945678901', N'567 Giải Phóng, Hà Nội', '2025-06-06 00:00:00'),
+    (N'Đặng Văn Đức', '1992-12-30 00:00:00', 1, '0956789012', N'890 Tây Sơn, Hà Nội', '2025-06-07 00:00:00'),
+    (N'Đỗ Thị Lan', '1996-04-05 00:00:00', 0, '0967890123', N'111 Láng Hạ, Hà Nội', '2025-06-08 00:00:00'),
+    (N'Trương Hoàng', '1995-08-20 00:00:00', 1, '0978901234', N'222 Thanh Nhàn, Hà Nội', '2025-06-09 00:00:00'),
+    (N'Bùi Thị Phương', '1998-01-12 00:00:00', 0, '0989012345', N'333 Lê Duẩn, Hà Nội', '2025-06-10 00:00:00');
+
+go
+INSERT INTO [GYM].[dbo].[Staff] ([fullName], [phone], [email], [workingSince])
+VALUES 
+    (N'Nguyễn Hoàng Nam', '0901234567', N'nguyenhoangnam@gmail.com', '2024-01-10 00:00:00'),
+    (N'Trần Thị Hồng', '0923456789', N'tranthihong@gmail.com', '2024-02-15 00:00:00'),
+    (N'Phạm Đức Thành', '0934567890', N'phamducthanh@gmail.com', '2024-03-20 00:00:00'),
+    (N'Lê Minh Hiếu', '0945678901', N'leminhhieu@gmail.com', '2024-04-25 00:00:00'),
+    (N'Hồ Thị Thanh', '0956789012', N'hothithanh@gmail.com', '2024-05-30 00:00:00'),
+    (N'Vũ Quốc Bảo', '0967890123', N'vuquocbao@gmail.com', '2024-06-05 00:00:00'),
+    (N'Đặng Thị Mai', '0978901234', N'dangthimai@gmail.com', '2024-07-10 00:00:00'),
+    (N'Đỗ Văn Thắng', '0989012345', N'dovanthang@gmail.com', '2024-08-15 00:00:00'),
+    (N'Trịnh Thị Hương', '0990123456', N'trinhthihuong@gmail.com', '2024-09-20 00:00:00'),
+    (N'Bùi Đức Hải', '0911234567', N'buiduchai@gmail.com', '2024-10-25 00:00:00');
+
+go
+INSERT INTO [GYM].[dbo].[Trainer] ([fullName], [phone], [specialty], [scheduleNote])
+VALUES 
+    (N'Nguyễn Văn Lộc', '0902345678', N'Tập gym tăng cơ', N'Thứ 2-6: 8h-12h, 14h-18h'),
+    (N'Trần Thị Linh', '0924567890', N'Yoga và thiền', N'Thứ 3-7: 7h-11h, 15h-19h'),
+    (N'Phạm Văn Thiên', '0935678901', N'Cardio và sức bền', N'Thứ 2-6: 9h-13h, 16h-20h'),
+    (N'Lê Thị Thảo', '0946789012', N'Pilates', N'Thứ 4-7: 8h-12h, 14h-18h'),
+    (N'Hồ Văn Khôi', '0957890123', N'Tập gym giảm cân', N'Thứ 2-5: 7h-11h, 15h-19h'),
+    (N'Vương Đức Tuấn', '0968901234', N'CrossFit', N'Thứ 3-6: 8h-12h, 14h-18h'),
+    (N'Đặng Thị An', '0979012345', N'Zumba', N'Thứ 2-6: 17h-21h'),
+    (N'Đỗ Thị Thủy', '0980123456', N'Tập gym tăng cơ', N'Thứ 3-7: 7h-11h, 15h-19h'),
+    (N'Trương Hoàng Phi', '0991234567', N'Kickboxing', N'Thứ 2-6: 8h-12h, 14h-18h'),
+    (N'Bùi Thị Phương', '0912345679', N'Yoga nâng cao', N'Thứ 4-7: 7h-11h, 15h-19h');
+go
+
+INSERT INTO [GYM].[dbo].[Package] ([name], [type], [price], [durationInDays], [description])
+VALUES 
+    (N'Gói 1 Ngày', N'Tiêu chuẩn', 30000.00, 1, N'Truy cập đầy đủ thiết bị gym trong 1 ngày'),
+    (N'Gói Thử Nghiệm 1 Tuần', N'Tiêu chuẩn', 150000.00, 7, N'Truy cập đầy đủ thiết bị gym trong 1 tuần'),
+    (N'Gói Cơ Bản 1 Tháng', N'Tiêu chuẩn', 500000.00, 30, N'Truy cập không giới hạn thiết bị gym trong 1 tháng'),
+    (N'Gói Cơ Bản 3 Tháng', N'Tiêu chuẩn', 1350000.00, 90, N'Gói tiết kiệm, truy cập thiết bị gym trong 3 tháng'),
+    (N'Gói Cơ Bản 6 Tháng', N'Tiêu chuẩn', 2550000.00, 180, N'Gói trung hạn, truy cập thiết bị gym trong 6 tháng'),
+    (N'Gói Cơ Bản 1 Năm', N'Tiêu chuẩn', 4800000.00, 365, N'Gói dài hạn, truy cập thiết bị gym cả năm, tiết kiệm nhất'),
+    (N'Gói Huấn Luyện Cá Nhân 1 Tháng', N'Huấn luyện cá nhân', 2000000.00, 30, N'Tập với huấn luyện viên cá nhân, lịch tùy chỉnh'),
+    (N'Gói Huấn Luyện Cá Nhân 3 Tháng', N'Huấn luyện cá nhân', 5400000.00, 90, N'Gói tiết kiệm, tập với huấn luyện viên cá nhân 3 tháng'),
+    (N'Gói Nhóm 1 Tháng', N'Nhóm', 1200000.00, 30, N'Gói cho 2-3 người, truy cập thiết bị gym không giới hạn'),
+    (N'Gói Nhóm 3 Tháng', N'Nhóm', 3240000.00, 90, N'Gói tiết kiệm cho 2-3 người, truy cập thiết bị gym'),
+    (N'Gói Nhóm 1 Năm', N'Nhóm', 11520000.00, 365, N'Gói dài hạn cho 2-3 người, truy cập thiết bị gym'),
+    (N'Gói Tăng Cơ 3 Tháng', N'Tiêu chuẩn', 1500000.00, 90, N'Gói tập trung tăng cơ, truy cập thiết bị gym và tư vấn');
