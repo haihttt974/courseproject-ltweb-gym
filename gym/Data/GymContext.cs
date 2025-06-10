@@ -53,9 +53,7 @@ public partial class GymContext : DbContext
 
             entity.ToTable("Member");
 
-            entity.Property(e => e.MemberId)
-                .ValueGeneratedNever()
-                .HasColumnName("memberId");
+            entity.Property(e => e.MemberId).HasColumnName("memberId");
             entity.Property(e => e.Address)
                 .HasColumnType("text")
                 .HasColumnName("address");
@@ -149,9 +147,7 @@ public partial class GymContext : DbContext
 
             entity.ToTable("Notification");
 
-            entity.Property(e => e.NotificationId)
-                .ValueGeneratedNever()
-                .HasColumnName("notificationId");
+            entity.Property(e => e.NotificationId).HasColumnName("notificationId");
             entity.Property(e => e.Content)
                 .HasColumnType("text")
                 .HasColumnName("content");
@@ -174,9 +170,7 @@ public partial class GymContext : DbContext
 
             entity.ToTable("Package");
 
-            entity.Property(e => e.PackageId)
-                .ValueGeneratedNever()
-                .HasColumnName("packageId");
+            entity.Property(e => e.PackageId).HasColumnName("packageId");
             entity.Property(e => e.Description)
                 .HasColumnType("text")
                 .HasColumnName("description");
@@ -200,9 +194,7 @@ public partial class GymContext : DbContext
 
             entity.ToTable("Payment");
 
-            entity.Property(e => e.PaymentId)
-                .ValueGeneratedNever()
-                .HasColumnName("paymentId");
+            entity.Property(e => e.PaymentId).HasColumnName("paymentId");
             entity.Property(e => e.Amount)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("amount");
@@ -219,9 +211,7 @@ public partial class GymContext : DbContext
 
             entity.ToTable("Role");
 
-            entity.Property(e => e.RoleId)
-                .ValueGeneratedNever()
-                .HasColumnName("roleId");
+            entity.Property(e => e.RoleId).HasColumnName("roleId");
             entity.Property(e => e.Description)
                 .HasColumnType("text")
                 .HasColumnName("description");
@@ -236,9 +226,7 @@ public partial class GymContext : DbContext
                 .HasName("PK_STAFF")
                 .IsClustered(false);
 
-            entity.Property(e => e.StaffId)
-                .ValueGeneratedNever()
-                .HasColumnName("staffId");
+            entity.Property(e => e.StaffId).HasColumnName("staffId");
             entity.Property(e => e.Email)
                 .HasColumnType("text")
                 .HasColumnName("email");
@@ -261,9 +249,7 @@ public partial class GymContext : DbContext
 
             entity.ToTable("Trainer");
 
-            entity.Property(e => e.TrainerId)
-                .ValueGeneratedNever()
-                .HasColumnName("trainerId");
+            entity.Property(e => e.TrainerId).HasColumnName("trainerId");
             entity.Property(e => e.FullName)
                 .HasColumnType("text")
                 .HasColumnName("fullName");
@@ -324,9 +310,7 @@ public partial class GymContext : DbContext
 
             entity.HasIndex(e => e.RoleId, "include_FK");
 
-            entity.Property(e => e.UserId)
-                .ValueGeneratedNever()
-                .HasColumnName("userId");
+            entity.Property(e => e.UserId).HasColumnName("userId");
             entity.Property(e => e.Email)
                 .HasColumnType("text")
                 .HasColumnName("email");
