@@ -75,10 +75,9 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Kiểm tra trùng lặp, xử lý NULL
         if (await _context.Users.AnyAsync(u =>
-            (u.UserName != null && u.UserName == model.UserName) ||
-            (u.Email != null && u.Email == model.Email)))
+        (u.UserName != null && u.UserName == model.UserName) ||
+        (u.Email != null && u.Email == model.Email)))
         {
             ModelState.AddModelError("", "Tên đăng nhập hoặc email đã tồn tại");
             return View(model);
