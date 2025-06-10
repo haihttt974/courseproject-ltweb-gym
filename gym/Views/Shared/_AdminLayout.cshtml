@@ -27,6 +27,32 @@
             color: white !important;
         }
 
+        .dark-mode {
+            background-color: #121212 !important;
+            color: #e0e0e0;
+        }
+
+            .dark-mode .main-sidebar,
+            .dark-mode .main-header,
+            .dark-mode .content-wrapper {
+                background-color: #1e1e1e !important;
+            }
+
+            .dark-mode .nav-sidebar .nav-link {
+                color: #aaa;
+            }
+
+                .dark-mode .nav-sidebar .nav-link.active,
+                .dark-mode .nav-sidebar .nav-link:hover {
+                    background-color: #007bff;
+                    color: #fff;
+                }
+
+            .dark-mode .main-footer {
+                background-color: #1e1e1e;
+                color: #ccc;
+            }
+
         .sidebar {
             background-color: #1f2d3d;
         }
@@ -41,8 +67,9 @@
             }
 
         .content-wrapper {
-            background-color: #f8f9fa;
-            padding: 1rem;
+            /* background-color: #f8f9fa;
+            padding: 1rem; */
+            padding-top: 70px;
         }
     </style>
 </head>
@@ -50,29 +77,48 @@
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-dark bg-dark">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                            <i class="fas fa-user-circle"></i> @User.Identity.Name
+        <nav class="main-header navbar navbar-expand navbar-dark bg-dark fixed-top shadow-sm">
+            <div class="container-fluid">
+                <!-- Left: Sidebar toggle -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                            <i class="fas fa-bars"></i>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" asp-controller="Account" asp-action="EditProfile">Trang cá nhân</a>
-                            <div class="dropdown-divider"></div>
-                            <form asp-controller="Account" asp-action="Logout" method="post" class="mb-0">
-                                <button type="submit" class="dropdown-item">Đăng xuất</button>
-                            </form>
-                        </div>
                     </li>
-                }
-            </ul>
+                </ul>
+
+                <!-- Right: User menu + optional dark mode toggle -->
+                <ul class="navbar-nav ml-auto align-items-center">
+                    <!-- Optional: Dark Mode toggle -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="darkModeToggle" title="Chế độ tối/sáng">
+                            <i id="darkModeIcon" class="fas fa-moon"></i>
+                        </a>
+                    </li>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-toggle="dropdown">
+                                <i class="fas fa-user-circle mr-1"></i>
+                                <span>@User.Identity.Name</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow">
+                                <a class="dropdown-item" asp-controller="Account" asp-action="EditProfile">
+                                    <i class="fas fa-user-edit mr-2"></i> Trang cá nhân
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="mb-0">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt mr-2"></i> Đăng xuất
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
         </nav>
 
         <!-- Sidebar -->
@@ -161,11 +207,11 @@
         </div>
 
         <!-- Footer -->
-        <footer class="main-footer text-sm">
-            <div class="float-right d-none d-sm-inline">
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
                 <b>Version</b> 1.0.0
             </div>
-            <strong>&copy; 2025 <a href="#">Gym Management</a>.</strong> All rights reserved.
+            <strong>&copy; 2025 Gym Management.</strong> All rights reserved.
         </footer>
     </div>
 
@@ -176,6 +222,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/admin.js" asp-append-version="true"></script>
+    <script>
+        const toggleBtn = document.getElementById('darkModeToggle');
+        const icon = document.getElementById('darkModeIcon');
+
+        const setIcon = (dark) => {
+            icon.classList.remove('fa-sun', 'fa-moon');
+            icon.classList.add(dark ? 'fa-sun' : 'fa-moon');
+        };
+
+        // Khởi động
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDark = localStorage.getItem('dark-mode') === 'true';
+            document.body.classList.toggle('dark-mode', isDark);
+            setIcon(isDark);
+        });
+
+        // Toggle khi click
+        toggleBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('dark-mode', isDark);
+            setIcon(isDark);
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
