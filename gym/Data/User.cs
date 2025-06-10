@@ -24,4 +24,5 @@ public partial class User
     public virtual Role Role { get; set; } = null!;
 
     public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
+    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 }

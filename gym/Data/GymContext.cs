@@ -365,6 +365,33 @@ public partial class GymContext : DbContext
                 .HasConstraintName("FK_USERNOTI_USERNOTIF_USER");
         });
 
+        modelBuilder.Entity<Feedback>(entity =>
+        {
+            entity.HasKey(e => e.FeedbackId)
+                .HasName("PK_Feedback");
+
+            entity.ToTable("Feedback");
+
+            entity.Property(e => e.FeedbackId).HasColumnName("feedbackId");
+
+            entity.Property(e => e.UserId).HasColumnName("userId");
+
+            entity.Property(e => e.Content)
+                .HasMaxLength(255)
+                .HasColumnName("content");
+
+            entity.Property(e => e.ThoiGian)
+                .HasColumnType("datetime")
+                .HasDefaultValueSql("GETDATE()")
+                .HasColumnName("thoiGian");
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.Feedbacks)
+                .HasForeignKey(e => e.UserId)
+                .HasConstraintName("FK_Feedback_User");
+        });
+
+
         OnModelCreatingPartial(modelBuilder);
     }
 
