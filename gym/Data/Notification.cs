@@ -13,7 +13,7 @@ public partial class Notification
 
     public DateTime? CreatedAt { get; set; }
 
-    public int SendRole { get; set; }
+    public int? SendRole { get; set; }
 
     public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
 }

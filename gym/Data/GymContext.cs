@@ -39,7 +39,7 @@ public partial class GymContext : DbContext
 
     public virtual DbSet<UserNotification> UserNotifications { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
 //        => optionsBuilder.UseSqlServer("Data Source=haiit;Initial Catalog=GYM;Integrated Security=True;Trust Server Certificate=True");
 
@@ -55,7 +55,7 @@ public partial class GymContext : DbContext
 
             entity.Property(e => e.MemberId).HasColumnName("memberId");
             entity.Property(e => e.Address)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("address");
             entity.Property(e => e.CreateDate)
                 .HasColumnType("datetime")
@@ -64,10 +64,12 @@ public partial class GymContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("dateOfBirth");
             entity.Property(e => e.FullName)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("fullName");
             entity.Property(e => e.Phone)
-                .HasColumnType("text")
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("phone");
             entity.Property(e => e.Sex).HasColumnName("sex");
         });
@@ -149,16 +151,14 @@ public partial class GymContext : DbContext
 
             entity.Property(e => e.NotificationId).HasColumnName("notificationId");
             entity.Property(e => e.Content)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("content");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("createdAt");
-            entity.Property(e => e.SendRole)
-                .HasColumnType("text")
-                .HasColumnName("sendRole");
+            entity.Property(e => e.SendRole).HasColumnName("sendRole");
             entity.Property(e => e.Title)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("title");
         });
 
@@ -172,17 +172,17 @@ public partial class GymContext : DbContext
 
             entity.Property(e => e.PackageId).HasColumnName("packageId");
             entity.Property(e => e.Description)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("description");
             entity.Property(e => e.DurationInDays).HasColumnName("durationInDays");
             entity.Property(e => e.Name)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("name");
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price");
             entity.Property(e => e.Type)
-                .HasColumnType("text")
+                .HasMaxLength(100)
                 .HasColumnName("type");
         });
 
@@ -199,7 +199,7 @@ public partial class GymContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("amount");
             entity.Property(e => e.Method)
-                .HasColumnType("text")
+                .HasMaxLength(100)
                 .HasColumnName("method");
         });
 
@@ -213,10 +213,10 @@ public partial class GymContext : DbContext
 
             entity.Property(e => e.RoleId).HasColumnName("roleId");
             entity.Property(e => e.Description)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("description");
             entity.Property(e => e.RoleName)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("roleName");
         });
 
@@ -228,13 +228,15 @@ public partial class GymContext : DbContext
 
             entity.Property(e => e.StaffId).HasColumnName("staffId");
             entity.Property(e => e.Email)
-                .HasColumnType("text")
+                .HasMaxLength(100)
                 .HasColumnName("email");
             entity.Property(e => e.FullName)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("fullName");
             entity.Property(e => e.Phone)
-                .HasColumnType("text")
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("phone");
             entity.Property(e => e.WorkingSince)
                 .HasColumnType("datetime")
@@ -251,16 +253,18 @@ public partial class GymContext : DbContext
 
             entity.Property(e => e.TrainerId).HasColumnName("trainerId");
             entity.Property(e => e.FullName)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("fullName");
             entity.Property(e => e.Phone)
-                .HasColumnType("text")
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("phone");
             entity.Property(e => e.ScheduleNote)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("scheduleNote");
             entity.Property(e => e.Specialty)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("specialty");
         });
 
@@ -280,7 +284,7 @@ public partial class GymContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("endTime");
             entity.Property(e => e.Node)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("node");
             entity.Property(e => e.StartTime)
                 .HasColumnType("datetime")
@@ -312,21 +316,19 @@ public partial class GymContext : DbContext
 
             entity.Property(e => e.UserId).HasColumnName("userId");
             entity.Property(e => e.Email)
-                .HasColumnType("text")
+                .HasMaxLength(100)
                 .HasColumnName("email");
             entity.Property(e => e.IsAtive).HasColumnName("isAtive");
             entity.Property(e => e.Password)
-                .HasColumnType("text")
+                .HasMaxLength(100)
                 .HasColumnName("password");
             entity.Property(e => e.ReferenceId).HasColumnName("referenceId");
             entity.Property(e => e.RoleId).HasColumnName("roleId");
             entity.Property(e => e.Status)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .HasMaxLength(255)
                 .HasColumnName("status");
             entity.Property(e => e.UserName)
-                .HasColumnType("text")
+                .HasMaxLength(100)
                 .HasColumnName("userName");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
