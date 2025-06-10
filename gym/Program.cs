@@ -1,4 +1,4 @@
-using gym.Data;
+﻿using gym.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +32,15 @@ namespace gym
                 app.UseHsts();
             }
 
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Error/Error500"); // Trang lỗi hệ thống
+                app.UseStatusCodePagesWithReExecute("/Error/{0}"); // Lỗi 404, 403, ...
+                app.UseHsts();
+            }
+
+            // Middleware bắt lỗi 404
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
             app.UseHttpsRedirection();
             app.UseRouting();
