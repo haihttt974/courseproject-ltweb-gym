@@ -371,6 +371,18 @@ CREATE TABLE "User" (
 GO
 
 /*==============================================================*/
+/* Table: "Feedback"                                                */
+/*==============================================================*/
+CREATE TABLE Feedback (
+    feedbackId INT IDENTITY(1,1) PRIMARY KEY,
+    userId INT NOT NULL,
+    content NVARCHAR(255) NULL,
+    thoiGian DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_Feedback_User FOREIGN KEY (userId) REFERENCES [User](userId)
+)
+GO
+
+/*==============================================================*/
 /* Index: include_FK                                            */
 /*==============================================================*/
 CREATE INDEX include_FK ON "User" (
