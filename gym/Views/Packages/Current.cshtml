@@ -1,0 +1,22 @@
+﻿@model gym.Data.MemberPackage
+
+<h2>Gói tập hiện tại</h2>
+
+@if (Model != null)
+{
+    <div class="card p-3">
+        <h4>@Model.Package.Name</h4>
+        <p>Bắt đầu: @Model.StartDate?.ToString("dd/MM/yyyy")</p>
+        <p>Kết thúc: @Model.EndDate?.ToString("dd/MM/yyyy")</p>
+        <p>Trạng thái: @(Model.IsActive == true ? "Còn hiệu lực" : "Hết hạn")</p>
+
+        <form asp-action="Renew" method="post">
+            <input type="hidden" name="packageId" value="@Model.PackageId" />
+            <button type="submit" class="btn btn-warning">Gia hạn</button>
+        </form>
+    </div>
+}
+else
+{
+    <p>Không có gói nào đang hoạt động.</p>
+}

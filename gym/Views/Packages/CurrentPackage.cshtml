@@ -1,0 +1,15 @@
+﻿@model gym.Data.MemberPackage
+
+@if (Model == null)
+{
+    <h4>@ViewBag.Message</h4>
+}
+else
+{
+    <h2>Gói tập hiện tại</h2>
+    <div class="card p-3">
+        <h4>@Model.Package.Name</h4>
+        <p>Thời hạn: @Model.StartDate?.ToString("dd/MM/yyyy") - @Model.EndDate?.ToString("dd/MM/yyyy")</p>
+        <p>Trạng thái: <strong class="text-success">Đang hoạt động</strong></p>
+    </div>
+}
