@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace gym.Data;
 
-public partial class MemberPackage
+public partial class MemberPakage
 {
     public int MemberId { get; set; }
 
@@ -21,6 +20,4 @@ public partial class MemberPackage
     public virtual Member Member { get; set; } = null!;
 
     public virtual Package Package { get; set; } = null!;
-    [NotMapped]
-    public DateTime EndTime { get; set; }
 }
