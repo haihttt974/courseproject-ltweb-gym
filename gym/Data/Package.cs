@@ -17,5 +17,5 @@ public partial class Package
 
     public string? Description { get; set; }
 
-    public virtual ICollection<MemberPackage> MemberPakages { get; set; } = new List<MemberPackage>();
+    public virtual ICollection<MemberPakage> MemberPakages { get; set; } = new List<MemberPakage>();
 }

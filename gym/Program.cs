@@ -25,10 +25,10 @@ namespace gym
                 options.AccessDeniedPath = "/Account/Login";
             });
 
-            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-            builder.Services.AddSingleton<EmailService>();
-            builder.Services.AddHostedService<ExpiredPackageChecker>();
-            builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            //builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            //builder.Services.AddSingleton<EmailService>();
+            //builder.Services.AddHostedService<ExpiredPackageChecker>();
+            //builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.

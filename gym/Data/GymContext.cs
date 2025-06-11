@@ -17,7 +17,7 @@ public partial class GymContext : DbContext
 
     public virtual DbSet<Member> Members { get; set; }
 
-    public virtual DbSet<MemberPackage> MemberPakages { get; set; }
+    public virtual DbSet<MemberPakage> MemberPakages { get; set; }
 
     public virtual DbSet<MemberPayment> MemberPayments { get; set; }
 
@@ -73,7 +73,7 @@ public partial class GymContext : DbContext
             entity.Property(e => e.Sex).HasColumnName("sex");
         });
 
-        modelBuilder.Entity<MemberPackage>(entity =>
+        modelBuilder.Entity<MemberPakage>(entity =>
         {
             entity.HasKey(e => new { e.MemberId, e.PackageId }).HasName("PK_MEMBERPAKAGE");
 
