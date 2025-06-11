@@ -577,3 +577,9 @@ VALUES
     (N'Gói Nhóm 3 Tháng', N'Nhóm', 3240000.00, 90, N'Gói tiết kiệm cho 2-3 người, truy cập thiết bị gym'),
     (N'Gói Nhóm 1 Năm', N'Nhóm', 11520000.00, 365, N'Gói dài hạn cho 2-3 người, truy cập thiết bị gym'),
     (N'Gói Tăng Cơ 3 Tháng', N'Tiêu chuẩn', 1500000.00, 90, N'Gói tập trung tăng cơ, truy cập thiết bị gym và tư vấn');
+
+INSERT INTO TrainingSchedule (trainerId, memberId, trainingDate, startTime, endTime, node)
+VALUES 
+(8, 8, '2025-06-15', '2025-06-15 07:00:00', '2025-06-15 09:00:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h'),
+(8, 10, '2025-06-15', '2025-06-15 09:30:00', '2025-06-15 11:30:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h'),
+(8, 6, '2025-06-15', '2025-06-15 15:00:00', '2025-06-15 17:00:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h');
