@@ -19,9 +19,10 @@ public partial class Member
 
     public DateTime? CreateDate { get; set; }
 
-    public virtual ICollection<MemberPakage> MemberPakages { get; set; } = new List<MemberPakage>();
+    public virtual ICollection<MemberPackage> MemberPakages { get; set; } = new List<MemberPackage>();
 
     public virtual ICollection<MemberPayment> MemberPayments { get; set; } = new List<MemberPayment>();
 
     public virtual ICollection<TrainingSchedule> TrainingSchedules { get; set; } = new List<TrainingSchedule>();
+    public string? Email { get; internal set; }
 }

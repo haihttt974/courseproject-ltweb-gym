@@ -1,6 +1,8 @@
 ﻿using gym.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using DinkToPdf; // Install-Package DinkToPdf
+using DinkToPdf.Contracts; //Install - Package DinkToPdf.Contracts
 
 namespace gym
 {
@@ -22,6 +24,11 @@ namespace gym
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/Login";
             });
+
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.AddSingleton<EmailService>();
+            builder.Services.AddHostedService<ExpiredPackageChecker>();
+            builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.
