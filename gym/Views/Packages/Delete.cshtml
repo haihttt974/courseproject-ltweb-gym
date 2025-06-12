@@ -1,8 +1,16 @@
 ﻿@model gym.Data.Package
 
 @{
-    ViewData["Title"] = "Delete";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Index";
+
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else if (User.IsInRole("Staff"))
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 }
 
 <h1>Delete</h1>
@@ -47,6 +55,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="PackageId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Admin">Back to List</a>
     </form>
 </div>

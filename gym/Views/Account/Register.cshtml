@@ -1,34 +1,89 @@
-﻿@model gym.Models.DTOs.RegisterDto
+﻿@model RegisterDto
 @{
-    ViewData["Title"] = "Đăng ký";
+    ViewData["Title"] = "Đăng ký hội viên";
 }
 
-<div class="container mt-5">
-    <h2 class="text-center">Đăng ký</h2>
-    <form asp-action="Register" method="post" class="w-50 mx-auto">
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="mb-3">
-            <label asp-for="UserName" class="form-label">Tên đăng nhập</label>
-            <input asp-for="UserName" class="form-control" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
+<h2 class="mb-4 text-center text-primary">Đăng ký hội viên mới</h2>
+
+<form asp-action="Register" method="post" class="needs-validation" novalidate>
+    <div class="row">
+        <!-- Họ tên -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="FullName" class="form-label"></label>
+            <input asp-for="FullName" class="form-control" required />
+            <span asp-validation-for="FullName" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label asp-for="Password" class="form-label">Mật khẩu</label>
-            <input asp-for="Password" class="form-control" type="password" />
-            <span asp-validation-for="Password" class="text-danger"></span>
+
+        <!-- Ngày sinh -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="DateOfBirth" class="form-label"></label>
+            <input asp-for="DateOfBirth" type="date" class="form-control" required />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label asp-for="Email" class="form-label">Email</label>
-            <input asp-for="Email" class="form-control" />
+
+        <!-- Giới tính -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Giới tính</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="Sex" value="true" checked />
+                <label class="form-check-label">Nam</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="Sex" value="false" />
+                <label class="form-check-label">Nữ</label>
+            </div>
+            <span asp-validation-for="Sex" class="text-danger"></span>
+        </div>
+
+        <!-- Số điện thoại -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="Phone" class="form-label"></label>
+            <input asp-for="Phone" class="form-control" required />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <!-- Email -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" required />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Đăng ký</button>
-            <a asp-action="Login" class="btn btn-link">Đã có tài khoản? Đăng nhập</a>
+
+        <!-- Tên đăng nhập -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="UserName" class="form-label"></label>
+            <input asp-for="UserName" class="form-control" required />
+            <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
-    </form>
-</div>
+
+        <!-- Mật khẩu -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" type="password" required />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <!-- Địa chỉ -->
+        <div class="col-md-12 mb-3">
+            <label class="form-label">Địa chỉ</label>
+            @await Html.PartialAsync("~/Views/Shared/Components/_AddressSelectionPartial.cshtml", Model)
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <!-- Nút Đăng ký -->
+        <div class="col-md-12 text-center">
+            <button type="submit" class="btn btn-primary px-5">Đăng ký</button>
+        </div>
+    </div>
+</form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            if (window.initializeAddressSelection) {
+                window.initializeAddressSelection();
+            }
+        });
+    </script>
 }

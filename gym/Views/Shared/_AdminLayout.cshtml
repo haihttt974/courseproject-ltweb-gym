@@ -163,12 +163,12 @@
                                         <p>Thêm mới</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                @* <li class="nav-item">
                                     <a asp-controller="Users" asp-action="Roles" class="nav-link @(currentAction == "Roles" && isUsersController ? "active" : "")">
                                         <i class="far fa-id-badge nav-icon text-warning"></i>
                                         <p>Phân quyền</p>
                                     </a>
-                                </li>
+                                </li> *@
                             </ul>
                         </li>
 
@@ -180,9 +180,16 @@
                         </li>
 
                         <li class="nav-item">
-                            <a asp-controller="Packages" asp-action="Index" class="nav-link @(currentController == "Packages" ? "active" : "")">
+                            <a asp-controller="Trainers" asp-action="Admin" class="nav-link @(currentController == "Account" ? "active" : "")">
+                                <i class="nav-icon fas fa-user-edit"></i>
+                                <p>Huấn luyện viên</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a asp-controller="Packages" asp-action="Admin" class="nav-link @(currentController == "Packages" ? "active" : "")">
                                 <i class="nav-icon fas fa-box-open"></i>
-                                <p>Khóa học</p>
+                                <p>Gói tập</p>
                             </a>
                         </li>
 

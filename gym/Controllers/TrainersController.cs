@@ -27,6 +27,11 @@ namespace gym.Controllers
             return View(await _context.Trainers.ToListAsync());
         }
 
+        public async Task<IActionResult> Admin()
+        {
+            return View(await _context.Trainers.ToListAsync());
+        }
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
