@@ -255,7 +255,14 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Members" asp-action="Index">Members</a>
-                        </li>                        <li class="nav-item">
+                        </li>
+                        @if (User.IsInRole("Trainer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Trainers" asp-action="MyMembers">👥 My Members</a>
+                            </li>
+                        }
+                        <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Trainers" asp-action="Index">Trainers</a>
                         </li>                        
                         <li class="nav-item dropdown">
