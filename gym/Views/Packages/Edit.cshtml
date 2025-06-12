@@ -1,8 +1,16 @@
 ﻿@model gym.Data.Package
 
 @{
-    ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Index";
+
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else if (User.IsInRole("Staff"))
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 }
 
 <h1>Edit</h1>
@@ -47,7 +55,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Admin">Back to List</a>
 </div>
 
 @section Scripts {

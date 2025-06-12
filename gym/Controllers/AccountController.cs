@@ -76,12 +76,28 @@ public class AccountController : Controller
         }
 
         if (await _context.Users.AnyAsync(u =>
-        (u.UserName != null && u.UserName == model.UserName) ||
-        (u.Email != null && u.Email == model.Email)))
+            (u.UserName != null && u.UserName == model.UserName) ||
+            (u.Email != null && u.Email == model.Email)))
         {
             ModelState.AddModelError("", "Tên đăng nhập hoặc email đã tồn tại");
             return View(model);
         }
+
+        // Tạo mới hội viên trước
+        var member = new Member
+        {
+            FullName = model.FullName,
+            DateOfBirth = model.DateOfBirth,
+            Sex = model.Sex,
+            Phone = model.Phone,
+            Address = model.Address,
+            CreateDate = DateTime.Now
+        };
+
+        _context.Members.Add(member);
+        await _context.SaveChangesAsync();
+
+        // Sau khi lưu xong, EF sẽ tự gán member.MemberId
 
         var user = new User
         {
@@ -90,7 +106,8 @@ public class AccountController : Controller
             Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
             Email = model.Email,
             Status = "Hoạt động",
-            IsAtive = true
+            IsAtive = true,
+            ReferenceId = member.MemberId // kết nối user với member
         };
 
         _context.Users.Add(user);
@@ -98,6 +115,7 @@ public class AccountController : Controller
 
         return RedirectToAction("Login");
     }
+
 
     // POST: Đăng xuất
     [HttpPost]

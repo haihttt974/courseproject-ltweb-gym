@@ -1,4 +1,4 @@
-using gym.Models;
+﻿using gym.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -10,10 +10,15 @@ namespace gym.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IWebHostEnvironment _env;
+        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env)
         {
             _logger = logger;
+            _env = env;
+        }
+        public IActionResult CheckEnvironment()
+        {
+            return Content($"👉 Environment: {_env.EnvironmentName}");
         }
 
         public IActionResult Index()

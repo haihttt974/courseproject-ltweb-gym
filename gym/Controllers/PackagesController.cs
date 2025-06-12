@@ -1,11 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using gym.Data;
+using gym.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using gym.Data;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace gym.Controllers
 {
@@ -20,6 +23,10 @@ namespace gym.Controllers
 
         // GET: Packages
         public async Task<IActionResult> Index()
+        {
+            return View(await _context.Packages.ToListAsync());
+        }
+        public async Task<IActionResult> Admin()
         {
             return View(await _context.Packages.ToListAsync());
         }
@@ -152,5 +159,63 @@ namespace gym.Controllers
         {
             return _context.Packages.Any(e => e.PackageId == id);
         }
+
+        [Authorize(Roles = "Member")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(int packageId)
+        {
+            // Lấy username hiện tại
+            string? username = User.Identity?.Name;
+
+            if (string.IsNullOrEmpty(username))
+                throw new Exception("❌ Không xác định được tài khoản.");
+
+            // Tìm user trong bảng User
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username && u.RoleId == 2);
+            if (user == null)
+                throw new Exception($"❌ Không tìm thấy user có username = {username}");
+
+            // Lấy MemberId từ referenceId
+            int memberId = (int)user.ReferenceId;
+
+            // Tìm member theo ID
+            var member = await _context.Members.FindAsync(memberId);
+            if (member == null)
+                throw new Exception($"❌ Không tìm thấy Member với ID = {memberId}");
+
+            // Lấy gói tập
+            var package = await _context.Packages.FindAsync(packageId);
+            if (package == null)
+                throw new Exception($"❌ Gói tập không tồn tại.");
+
+            // Kiểm tra đã đăng ký chưa
+            var hasActive = await _context.MemberPakages
+                .AnyAsync(mp => mp.MemberId == memberId && mp.PackageId == packageId && mp.IsActive == true);
+
+            if (hasActive)
+            {
+                TempData["Error"] = "Bạn đã đăng ký gói này rồi.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Đăng ký mới
+            var memberPackage = new MemberPakage
+            {
+                MemberId = memberId,
+                PackageId = packageId,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(package.DurationInDays ?? 0),
+                IsPaid = false,
+                IsActive = true
+            };
+
+            _context.MemberPakages.Add(memberPackage);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Đăng ký thành công!";
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
