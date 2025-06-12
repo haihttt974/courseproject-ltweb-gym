@@ -579,7 +579,7 @@ VALUES
     (N'Gói Tăng Cơ 3 Tháng', N'Tiêu chuẩn', 1500000.00, 90, N'Gói tập trung tăng cơ, truy cập thiết bị gym và tư vấn');
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
---                                           TRINH NÌ
+--                                           TRINH
 INSERT INTO TrainingSchedule (trainerId, memberId, trainingDate, startTime, endTime, node)
 VALUES 
 (8, 8, '2025-06-15', '2025-06-15 07:00:00', '2025-06-15 09:00:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h'),
@@ -595,3 +595,25 @@ VALUES
 (8, 18, '2025-06-15', '2025-06-15 07:00:00', '2025-06-15 09:00:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h'),
 (8, 20, '2025-06-15', '2025-06-15 09:30:00', '2025-06-15 11:30:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h'),
 (8, 16, '2025-06-15', '2025-06-15 15:00:00', '2025-06-15 17:00:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h');
+
+
+
+-- Thêm ràng buộc (Vì insert dữ liệu rồi nên không thêm trực tiếp được, phải cho null col Type sau đó thêm ràng buộc rồi thêm Type vào)
+-- Cho tất cả type=null
+UPDATE [GYM].[dbo].[Package]
+SET [type] = null
+WHERE [type] NOT IN (N'...');
+-- ràng buộc
+ALTER TABLE [GYM].[dbo].[Package]
+ADD CONSTRAINT CHK_Package_Type 
+CHECK ([type] IN (N'Tiêu chuẩn', N'Huấn luyện cá nhân', N'Nhóm', N'Huấn luyện nhóm'));
+-- thêm lại type
+UPDATE [GYM].[dbo].[Package]
+SET [type] = 
+    CASE 
+        WHEN [name] IN (N'Gói 1 Ngày', N'Gói Thử Nghiệm 1 Tuần', N'Gói Cơ Bản 1 Tháng', N'Gói Cơ Bản 3 Tháng', N'Gói Cơ Bản 6 Tháng', N'Gói Cơ Bản 1 Năm', N'Gói Tăng Cơ 3 Tháng') THEN N'Tiêu chuẩn'
+        WHEN [name] IN (N'Gói Huấn Luyện Cá Nhân 1 Tháng', N'Gói Huấn Luyện Cá Nhân 3 Tháng') THEN N'Huấn luyện cá nhân'
+        WHEN [name] IN (N'Gói Nhóm 1 Tháng', N'Gói Nhóm 3 Tháng', N'Gói Nhóm 1 Năm') THEN N'Nhóm'
+        ELSE N'Tiêu chuẩn' -- Giá trị mặc định cho các gói không xác định
+    END
+WHERE [type] IS NULL;
