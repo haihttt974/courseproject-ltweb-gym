@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Xác nhận tài khoản GYM Club</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .otp-code {
+            font-size: 28px;
+            font-weight: bold;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Xin chào {{FULLNAME}},</h2>
+        <p>Bạn vừa đăng ký tài khoản tại <strong>GYM Club</strong>.</p>
+        <p>Mã xác nhận (OTP) của bạn là:</p>
+        <p class="otp-code">{{OTP}}</p>
+        <p>Vui lòng nhập mã này vào hệ thống để xác thực tài khoản.</p>
+        <hr />
+        <p>Trân trọng,<br />GYM Club Team</p>
+    </div>
+</body>
+</html>
