@@ -1,336 +1,94 @@
 ﻿<!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - Gym Management</title>
+
+    <!-- GIỮ Bootstrap và FontAwesome bạn đã dùng -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/gym.styles.css" asp-append-version="true" />
-    <style>
-        :root {
-            --primary-color: #007bff;
-            --secondary-color: #0056b3;
-            --accent-color: #00c4b4;
-            --text-color: #212529;
-            --bg-color: #f8f9fa;
-            --footer-bg: #1a252f;
-            --footer-text: #adb5bd;
-            --transition: all 0.3s ease;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .navbar {
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1030;
-            transition: var(--transition);
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #fff !important;
-            display: flex;
-            align-items: center;
-            transition: var(--transition);
-        }
-
-            .navbar-brand:hover {
-                transform: scale(1.05);
-            }
-
-        .nav-link {
-            color: #fff !important;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            position: relative;
-            transition: var(--transition);
-        }
-
-            .nav-link:hover {
-                color: var(--accent-color) !important;
-                transform: translateY(-2px);
-            }
-
-            .nav-link::after {
-                content: '';
-                position: absolute;
-                width: 0;
-                height: 2px;
-                bottom: 0;
-                left: 50%;
-                background-color: var(--accent-color);
-                transition: var(--transition);
-                transform: translateX(-50%);
-            }
-
-            .nav-link:hover::after {
-                width: 50%;
-            }
-
-        .btn-link {
-            color: #fff !important;
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-            .btn-link:hover {
-                color: var(--accent-color) !important;
-            }
-
-        .container-main {
-            flex: 1 0 auto;
-            padding: 2rem 0;
-            animation: fadeIn 0.5s ease-in;
-            overflow-y: auto;
-        }
-
-        .content-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin: 1rem 0;
-            transition: var(--transition);
-        }
-
-            .content-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-            }
-
-        .footer {
-            background-color: var(--footer-bg);
-            color: var(--footer-text);
-            padding: 1rem 0;
-            flex-shrink: 0;
-            font-size: 0.9rem;
-        }
-
-            .footer a {
-                color: var(--footer-text);
-                text-decoration: none;
-                transition: var(--transition);
-            }
-
-                .footer a:hover {
-                    color: var(--accent-color);
-                }
-
-            .footer .container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 1rem;
-            }
-
-        .social-icons a {
-            font-size: 1rem;
-            margin: 0 0.5rem;
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        .nav-link.dropdown-toggle::after {
-            display: none;
-        }
-
-        @@keyframes spin {
-            0%
-
-        {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-
-        }
-
-        @@keyframes fadeIn {
-            from
-
-        {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-
-        }
-
-        @@media (max-width: 768px) {
-            .navbar-nav
-
-        {
-            padding: 1rem;
-        }
-
-        .nav-link {
-            padding: 0.5rem 0;
-        }
-
-        .footer .container {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Smooth scroll for anchor links
-            $('a[href*="#"]').on('click', function(e) {
-                e.preventDefault();
-                $('html, body').animate({
-                    scrollTop: $($(this).attr('href')).offset().top
-                }, 500, 'linear');
-            });
-
-            // Show loading overlay on form submit
-            $('form').on('submit', function() {
-                $('.loading-overlay').fadeIn();
-            });
-        });
-    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Navbar -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="fas fa-dumbbell me-2"></i>Gym Management
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-dumbbell me-2"></i>GymManager
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <!-- Menu trái -->
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Trang chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Members" asp-action="Index">Members</a>
+                            <a class="nav-link" asp-controller="Members" asp-action="Index">Hội viên</a>
                         </li>
-                        @if (User.IsInRole("Trainer"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Trainers" asp-action="MyMembers">👥 My Members</a>
-                            </li>
-                        }
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Trainers" asp-action="Index">Trainers</a>
-                        </li>                        
-                        <li class="nav-item dropdown">
-                            <a class="nav-link d-flex align-items-center gap-1" href="#" id="usersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-people-fill"></i> <!-- Bootstrap icon: you can change this -->
-                                Users
-                                <i class="bi bi-chevron-down"></i> <!-- Replace default caret -->
-                            </a>
-                            <ul class="dropdown-menu shadow rounded" aria-labelledby="usersDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">👥 All Users</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Create">➕ Add User</a></li>
-                            </ul>
+                            <a class="nav-link" asp-controller="Packages" asp-action="Index">Gói tập</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Trainers" asp-action="Index">Huấn luyện viên</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Staffs" asp-action="Index">Nhân viên</a>
                         </li>
                     </ul>
+
+                    <!-- Menu phải: Đăng ký / Đăng nhập -->
                     <ul class="navbar-nav ms-auto">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <span class="nav-link">Xin chào, @User.Identity.Name</span>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="EditProfile">Trang cá nhân</a>
-                            </li>
-                            <li class="nav-item">
-                                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                    <button type="submit" class="nav-link btn btn-link">Đăng xuất</button>
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Đăng nhập</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">Đăng ký</a>
-                            </li>
-                        }
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Register">
+                                <i class="fas fa-user-plus me-1"></i>Đăng ký
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                <i class="fas fa-sign-in-alt me-1"></i>Đăng nhập
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container container-main">
-        <main role="main" class="pb-3">
-            <div class="content-card">
-                @RenderBody()
+
+    <!-- Nội dung chính -->
+    <main role="main" class="flex-fill container py-4">
+        @RenderBody()
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer bg-primary text-white mt-auto py-3">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <div>
+                <span>© 2025 Gym Management</span> |
+                <a class="text-white text-decoration-none" asp-controller="Home" asp-action="Privacy">Chính sách</a> |
+                <a class="text-white text-decoration-none" asp-controller="Home" asp-action="Contact">Liên hệ</a>
             </div>
-        </main>
-    </div>
-    <footer class="footer">
-        <div class="container">
-            <span>© 2025 Gym Management.</span>
-            <span>
-                <a asp-area="" asp-controller="Home" asp-action="Privacy">Chính sách</a> |
-                <a asp-area="" asp-controller="Home" asp-action="Contact">Liên hệ</a> |
-                <span class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </span>
-            </span>
+            <div class="social-icons mt-2 mt-md-0">
+                <a href="https://facebook.com" target="_blank" class="btn btn-outline-light btn-sm rounded-circle me-2" title="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://twitter.com" target="_blank" class="btn btn-outline-light btn-sm rounded-circle me-2" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="btn btn-outline-light btn-sm rounded-circle" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
         </div>
     </footer>
-    <div class="loading-overlay">
-        <div class="loader"></div>
-    </div>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Bootstrap script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

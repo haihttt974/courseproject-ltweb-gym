@@ -579,7 +579,7 @@ VALUES
     (N'Gói Tăng Cơ 3 Tháng', N'Tiêu chuẩn', 1500000.00, 90, N'Gói tập trung tăng cơ, truy cập thiết bị gym và tư vấn');
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
---                                           BÉ TRINH
+--                                           TRINH NÌ
 INSERT INTO TrainingSchedule (trainerId, memberId, trainingDate, startTime, endTime, node)
 VALUES 
 (8, 8, '2025-06-15', '2025-06-15 07:00:00', '2025-06-15 09:00:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h'),
