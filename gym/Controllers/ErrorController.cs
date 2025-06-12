@@ -25,15 +25,15 @@ namespace gym.Controllers
         [Route("Error/{statusCode}")]
         public IActionResult GenericError(int statusCode)
         {
-            switch (statusCode)
+            Response.StatusCode = statusCode; // Đảm bảo status code được giữ
+
+            return statusCode switch
             {
-                case 404: return RedirectToAction("Error404");
-                case 403: return RedirectToAction("Error403");
-                case 500: return RedirectToAction("Error500");
-                default:
-                    ViewBag.ErrorMessage = $"Lỗi {statusCode} không xác định.";
-                    return View("GenericError");
-            }
+                403 => View("AccessDenied"),
+                404 => View("NotFound"),
+                500 => View("ServerError"),
+                _ => View("GenericError", statusCode)
+            };
         }
     }
 }

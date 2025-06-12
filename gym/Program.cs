@@ -19,11 +19,11 @@ namespace gym
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/Account/Login";
-                options.AccessDeniedPath = "/Account/Login";
-            });
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login";                // Chưa đăng nhập
+                    options.AccessDeniedPath = "/Error/404";       // Đã login nhưng sai role
+                });
 
             //builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             //builder.Services.AddSingleton<EmailService>();
@@ -50,8 +50,10 @@ namespace gym
             app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();

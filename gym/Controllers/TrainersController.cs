@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using gym.Data;
+using gym.Models; // giả sử model nằm ở đây
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using gym.Data;
-using gym.Models; // giả sử model nằm ở đây
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace gym.Controllers
 {
@@ -116,6 +117,7 @@ namespace gym.Controllers
         // -------------------- Chức năng Trainer đăng nhập --------------------
 
         // Danh sách hội viên phụ trách
+        [Authorize(Roles = "Trainer")]
         public async Task<IActionResult> MyMembers()
         {
             int trainerId = GetCurrentTrainerId();
@@ -131,6 +133,7 @@ namespace gym.Controllers
         }
 
         // Lịch sử tập luyện của hội viên
+        [Authorize(Roles = "Trainer")]
         public async Task<IActionResult> MemberHistory(int id)
         {
             var sessions = await _context.TrainingSchedules
@@ -141,21 +144,19 @@ namespace gym.Controllers
             return View(sessions);
         }
 
-       
-
         // Xem thông báo gửi đến trainer
-        public async Task<IActionResult> MyNotifications()
-        {
-            int userId = GetCurrentUserId();
+        //public async Task<IActionResult> MyNotifications()
+        //{
+        //    int userId = GetCurrentUserId();
 
-            var notifications = await _context.UserNotifications
-                .Include(un => un.Notification)
-                .Where(un => un.UserId == userId)
-                .OrderByDescending(un => un.TimeSend)
-                .ToListAsync();
+        //    var notifications = await _context.UserNotifications
+        //        .Include(un => un.Notification)
+        //        .Where(un => un.UserId == userId)
+        //        .OrderByDescending(un => un.TimeSend)
+        //        .ToListAsync();
 
-            return View(notifications);
-        }
+        //    return View(notifications);
+        //}
 
         // -------------------- Hàm hỗ trợ giả định --------------------
 
@@ -177,11 +178,10 @@ namespace gym.Controllers
             return (int)user.ReferenceId; // đây chính là TrainerId
         }
 
-
-        private int GetCurrentUserId()
-        {
-            // TODO: bạn cần lấy từ session, ở đây tạm giả định UserId = 5
-            return 5;
-        }
+        //private int GetCurrentUserId()
+        //{
+        //    // TODO: bạn cần lấy từ session, ở đây tạm giả định UserId = 5
+        //    return 5;
+        //}
     }
 }
