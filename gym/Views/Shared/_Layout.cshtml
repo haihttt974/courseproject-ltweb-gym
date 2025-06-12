@@ -262,6 +262,14 @@
                                 <a class="nav-link" asp-controller="Trainers" asp-action="MyMembers">👥 My Members</a>
                             </li>
                         }
+                        else if (User.IsInRole("Staff"))
+                        {
+
+                        }
+                        else if (User.IsInRole("Member"))
+                        {
+
+                        }
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Trainers" asp-action="Index">Trainers</a>
                         </li>                        
