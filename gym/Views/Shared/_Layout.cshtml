@@ -254,9 +254,6 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Members" asp-action="Index">Members</a>
-                        </li>
                         @if (User.IsInRole("Trainer"))
                         {
                             <li class="nav-item">
@@ -269,6 +266,9 @@
                                 <a class="nav-link" asp-area="" asp-controller="Trainers" asp-action="Index">Trainers</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Members" asp-action="Index">Members</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Packages" asp-action="Admin">Packages</a>
                             </li>
                         }
@@ -278,7 +278,7 @@
                                 <a class="nav-link" asp-controller="Packages" asp-action="Index">Register Packages</a>
                             </li>
                         }
-                        <li class="nav-item dropdown">
+                        @* <li class="nav-item dropdown">
                             <a class="nav-link d-flex align-items-center gap-1" href="#" id="usersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-people-fill"></i> <!-- Bootstrap icon: you can change this -->
                                 Users
@@ -288,7 +288,7 @@
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">👥 All Users</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Create">➕ Add User</a></li>
                             </ul>
-                        </li>
+                        </li> *@
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         @if (User.Identity.IsAuthenticated)
