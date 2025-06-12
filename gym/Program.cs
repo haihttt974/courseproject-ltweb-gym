@@ -14,7 +14,11 @@ namespace gym
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            
+            builder.Services.AddScoped<EmailService>();
 
+            builder.Services.AddSession();
+            
             builder.Services.AddDbContext<GymContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -44,6 +48,8 @@ namespace gym
                 app.UseStatusCodePagesWithReExecute("/Error/{0}"); // Cho 404, 403, ...
                 app.UseHsts();
             }
+
+            app.UseSession();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

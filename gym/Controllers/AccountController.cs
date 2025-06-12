@@ -13,10 +13,13 @@ namespace gym.Controllers;
 public class AccountController : Controller
 {
     private readonly GymContext _context;
-
-    public AccountController(GymContext context)
+    private readonly EmailService _emailService;
+    private readonly IConfiguration _configuration;
+    public AccountController(GymContext context, EmailService emailService, IConfiguration configuration)
     {
         _context = context;
+        _emailService = emailService;
+        _configuration = configuration;
     }
 
     // GET: Đăng nhập
@@ -75,6 +78,12 @@ public class AccountController : Controller
             return View(model);
         }
 
+        if (model.Password != model.ConfirmPassword)
+        {
+            ModelState.AddModelError("ConfirmPassword", "Mật khẩu xác nhận không khớp");
+            return View(model);
+        }
+
         if (await _context.Users.AnyAsync(u =>
             (u.UserName != null && u.UserName == model.UserName) ||
             (u.Email != null && u.Email == model.Email)))
@@ -83,39 +92,32 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Tạo mới hội viên trước
-        var member = new Member
-        {
-            FullName = model.FullName,
-            DateOfBirth = model.DateOfBirth,
-            Sex = model.Sex,
-            Phone = model.Phone,
-            Address = model.Address,
-            CreateDate = DateTime.Now
-        };
+        // Lưu thông tin tạm thời vào session (chưa lưu DB)
+        HttpContext.Session.SetString("TempRegister_FullName", model.FullName);
+        HttpContext.Session.SetString("TempRegister_DateOfBirth", model.DateOfBirth.ToString("yyyy-MM-dd"));
+        HttpContext.Session.SetString("TempRegister_Sex", model.Sex.ToString());
+        HttpContext.Session.SetString("TempRegister_Phone", model.Phone);
+        HttpContext.Session.SetString("TempRegister_Address", model.Address);
+        HttpContext.Session.SetString("TempRegister_UserName", model.UserName);
+        HttpContext.Session.SetString("TempRegister_Password", model.Password);
+        HttpContext.Session.SetString("TempRegister_Email", model.Email);
 
-        _context.Members.Add(member);
-        await _context.SaveChangesAsync();
+        // Tạo mã OTP
+        var otpCode = new Random().Next(100000, 999999).ToString();
+        HttpContext.Session.SetString("RegisterOtp", otpCode);
+        HttpContext.Session.SetString("RegisterEmail", model.Email);
 
-        // Sau khi lưu xong, EF sẽ tự gán member.MemberId
+        // Gửi mail OTP
+        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "OtpRegisterTemplate.html");
+        string emailBody = await System.IO.File.ReadAllTextAsync(templatePath);
+        emailBody = emailBody.Replace("{{FULLNAME}}", model.FullName)
+                             .Replace("{{OTP}}", otpCode);
 
-        var user = new User
-        {
-            RoleId = 2, // Member
-            UserName = model.UserName,
-            Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
-            Email = model.Email,
-            Status = "Hoạt động",
-            IsAtive = true,
-            ReferenceId = member.MemberId // kết nối user với member
-        };
+        var emailService = new EmailService(_configuration);
+        await emailService.SendEmailAsync(model.Email, "Xác nhận tài khoản GYM Club", emailBody);
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-
-        return RedirectToAction("Login");
+        return RedirectToAction("VerifyOtp", new { email = model.Email });
     }
-
 
     // POST: Đăng xuất
     [HttpPost]
@@ -209,5 +211,74 @@ public class AccountController : Controller
         await _context.SaveChangesAsync();
 
         return RedirectToAction("Index", "Home");
+    }
+
+    [HttpGet]
+    public IActionResult VerifyOtp(string email)
+    {
+        return View(new OtpVerificationDto { Email = email });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> VerifyOtp(OtpVerificationDto model)
+    {
+        var sessionOtp = HttpContext.Session.GetString("RegisterOtp");
+        var sessionEmail = HttpContext.Session.GetString("RegisterEmail");
+
+        if (model.Email != sessionEmail || model.OtpCode != sessionOtp)
+        {
+            ModelState.AddModelError("", "Mã OTP không đúng hoặc đã hết hạn.");
+            return View(model);
+        }
+
+        try
+        {
+            var member = new Member
+            {
+                FullName = HttpContext.Session.GetString("TempRegister_FullName"),
+                DateOfBirth = DateTime.Parse(HttpContext.Session.GetString("TempRegister_DateOfBirth")),
+                Sex = bool.Parse(HttpContext.Session.GetString("TempRegister_Sex")),
+                Phone = HttpContext.Session.GetString("TempRegister_Phone"),
+                Address = HttpContext.Session.GetString("TempRegister_Address"),
+                CreateDate = DateTime.Now
+            };
+
+            _context.Members.Add(member);
+            await _context.SaveChangesAsync();
+
+            var user = new User
+            {
+                RoleId = 2,
+                UserName = HttpContext.Session.GetString("TempRegister_UserName"),
+                Password = BCrypt.Net.BCrypt.HashPassword(HttpContext.Session.GetString("TempRegister_Password")),
+                Email = sessionEmail,
+                Status = "Hoạt động",
+                IsAtive = true,
+                ReferenceId = member.MemberId
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            // Clear session
+            HttpContext.Session.Remove("RegisterOtp");
+            HttpContext.Session.Remove("RegisterEmail");
+            HttpContext.Session.Remove("TempRegister_FullName");
+            HttpContext.Session.Remove("TempRegister_DateOfBirth");
+            HttpContext.Session.Remove("TempRegister_Sex");
+            HttpContext.Session.Remove("TempRegister_Phone");
+            HttpContext.Session.Remove("TempRegister_Address");
+            HttpContext.Session.Remove("TempRegister_UserName");
+            HttpContext.Session.Remove("TempRegister_Password");
+            HttpContext.Session.Remove("TempRegister_Email");
+
+            TempData["Success"] = "✅ Xác thực OTP thành công. Bạn có thể đăng nhập!";
+            return RedirectToAction("Login");
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", "❌ Có lỗi xảy ra khi lưu thông tin: " + ex.Message);
+            return View(model);
+        }
     }
 }
