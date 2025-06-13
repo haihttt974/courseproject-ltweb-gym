@@ -1,0 +1,53 @@
+﻿@model AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Tổng số hội viên</h5>
+                <p class="card-text fs-3">@Model.TotalMembers</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Doanh thu tháng này</h5>
+                <p class="card-text fs-3">@Model.RevenueThisMonth.ToString("N0") VNĐ</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Hội viên sắp hết hạn</h5>
+                <p class="card-text fs-3">@Model.ExpiringSoonCount</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>🔔 Thông báo mới nhất</h4>
+<ul class="list-group mb-3">
+    @foreach (var noti in Model.LatestNotifications)
+    {
+        <li class="list-group-item">
+            <strong>@noti.Title</strong><br />
+            <small class="text-muted">@noti.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</small><br />
+            @noti.Content
+        </li>
+    }
+</ul>
+
+<h4 class="mt-4">⚡ Truy cập nhanh</h4>
+<div class="btn-group">
+    <a href="@Url.Action("Index", "Users")" class="btn btn-outline-primary">Quản lý người dùng</a>
+    <a href="@Url.Action("Index", "Packages")" class="btn btn-outline-success">Gói tập & Thanh toán</a>
+    <a href="@Url.Action("Settings", "System")" class="btn btn-outline-dark">Quản lý hệ thống</a>
+</div>
