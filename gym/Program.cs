@@ -1,8 +1,10 @@
-﻿using gym.Data;
+﻿using DinkToPdf; // Install-Package DinkToPdf
+using DinkToPdf.Contracts; //Install - Package DinkToPdf.Contracts
+using gym.Data;
+using gym.Models;
+using gym.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using DinkToPdf; // Install-Package DinkToPdf
-using DinkToPdf.Contracts; //Install - Package DinkToPdf.Contracts
 
 namespace gym
 {
@@ -15,10 +17,14 @@ namespace gym
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             
+            builder.Services.Configure<OpenAIConfig>(
+                builder.Configuration.GetSection("OpenAI"));
+            builder.Services.AddHttpClient<IChatBotService, ChatBotService>();
+
             builder.Services.AddScoped<EmailService>();
 
             builder.Services.AddSession();
-            
+
             builder.Services.AddDbContext<GymContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

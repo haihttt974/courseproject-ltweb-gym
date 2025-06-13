@@ -277,6 +277,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Packages" asp-action="Index">Register Packages</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Chat" asp-action="Index">Chat với AI</a>
+                            </li>
                         }
                         @* <li class="nav-item dropdown">
                             <a class="nav-link d-flex align-items-center gap-1" href="#" id="usersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -345,5 +348,23 @@
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <!-- Nút tròn mở chat -->
+    <div onclick="toggleChatPopup()" title="Chat với AI 🤖"
+         style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #007bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; z-index: 9999;">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="AI" style="width: 28px; height: 28px;" />
+    </div>
+
+    <!-- Chat popup (iframe) -->
+    <div id="chatPopup" style="display: none; position: fixed; bottom: 90px; right: 20px; width: 500px; height: 580px; background: white; border-radius: 16px; box-shadow: 0 0 20px rgba(0,0,0,0.15); z-index: 9999; overflow: hidden;">
+        <iframe src="/Chat" style="width: 100%; height: 100%; border: none; border-radius: 16px;"></iframe>
+    </div>
+
+    <script>
+        function toggleChatPopup() {
+            const popup = document.getElementById("chatPopup");
+            popup.style.display = popup.style.display === "none" ? "block" : "none";
+        }
+    </script>
+
 </body>
 </html>
