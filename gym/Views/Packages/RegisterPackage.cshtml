@@ -1,0 +1,25 @@
+﻿@model gym.Data.Package
+@{
+    ViewData["Title"] = "Xác nhận đăng ký";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center text-primary">Xác nhận đăng ký gói tập</h2>
+
+    <div class="card mx-auto mt-4 shadow p-4" style="max-width: 600px;">
+        <h4 class="card-title text-info">@Model.Name</h4>
+        <p><strong>Loại:</strong> @Model.Type</p>
+        <p><strong>Giá:</strong> @Model.Price?.ToString("N0") VNĐ</p>
+        <p><strong>Thời gian:</strong> @Model.DurationInDays ngày</p>
+        <p><strong>Mô tả:</strong> @Model.Description</p>
+
+        <form asp-action="ConfirmRegister" method="post">
+            <input type="hidden" name="packageId" value="@Model.PackageId" />
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+                <button type="submit" class="btn btn-success">Xác nhận đăng ký</button>
+            </div>
+        </form>
+    </div>
+</div>

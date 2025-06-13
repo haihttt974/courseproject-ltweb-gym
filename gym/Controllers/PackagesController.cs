@@ -24,7 +24,11 @@ namespace gym.Controllers
         // GET: Packages
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Packages.ToListAsync());
+            var packages = await _context.Packages
+                .Include(p => p.MemberPakages)
+                .ToListAsync();
+
+            return View(packages);
         }
         public async Task<IActionResult> Admin()
         {
@@ -161,37 +165,40 @@ namespace gym.Controllers
         }
 
         [Authorize(Roles = "Member")]
+        [HttpGet]
+        public async Task<IActionResult> RegisterPackage(int packageId)
+        {
+            var package = await _context.Packages.FindAsync(packageId);
+            if (package == null)
+                return NotFound();
+
+            return View(package);
+        }
+
+        [Authorize(Roles = "Member")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(int packageId)
+        public async Task<IActionResult> ConfirmRegister(int packageId)
         {
-            // Lấy username hiện tại
             string? username = User.Identity?.Name;
-
             if (string.IsNullOrEmpty(username))
                 throw new Exception("❌ Không xác định được tài khoản.");
 
-            // Tìm user trong bảng User
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username && u.RoleId == 2);
             if (user == null)
                 throw new Exception($"❌ Không tìm thấy user có username = {username}");
 
-            // Lấy MemberId từ referenceId
             int memberId = (int)user.ReferenceId;
-
-            // Tìm member theo ID
             var member = await _context.Members.FindAsync(memberId);
             if (member == null)
                 throw new Exception($"❌ Không tìm thấy Member với ID = {memberId}");
 
-            // Lấy gói tập
             var package = await _context.Packages.FindAsync(packageId);
             if (package == null)
                 throw new Exception($"❌ Gói tập không tồn tại.");
 
-            // Kiểm tra đã đăng ký chưa
             var hasActive = await _context.MemberPakages
-                .AnyAsync(mp => mp.MemberId == memberId && mp.PackageId == packageId && mp.IsActive == true);
+                .AnyAsync(mp => mp.MemberId == memberId && mp.PackageId == packageId && mp.IsActive==true);
 
             if (hasActive)
             {
@@ -199,7 +206,6 @@ namespace gym.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Đăng ký mới
             var memberPackage = new MemberPakage
             {
                 MemberId = memberId,
@@ -216,6 +222,5 @@ namespace gym.Controllers
             TempData["Success"] = "Đăng ký thành công!";
             return RedirectToAction(nameof(Index));
         }
-
     }
 }
