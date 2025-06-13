@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Xác nhận đăng ký";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var isPT = Model.Type == "Huấn luyện cá nhân";
 }
 
 <div class="container mt-4">
@@ -16,6 +17,23 @@
 
         <form asp-action="ConfirmRegister" method="post">
             <input type="hidden" name="packageId" value="@Model.PackageId" />
+
+            @if (isPT)
+            {
+                <div class="form-group mt-3">
+                    <label for="trainerId"><strong>Chọn Huấn luyện viên:</strong></label>
+                    <select class="form-control" name="trainerId" required>
+                        <option disabled selected>-- Chọn huấn luyện viên --</option>
+                        @foreach (var trainer in ViewBag.Trainers as List<gym.Data.Trainer>)
+                        {
+                            <option value="@trainer.TrainerId">
+                                @trainer.FullName - @trainer.Specialty
+                            </option>
+                        }
+                    </select>
+                </div>
+            }
+
             <div class="d-flex justify-content-between mt-4">
                 <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
                 <button type="submit" class="btn btn-success">Xác nhận đăng ký</button>

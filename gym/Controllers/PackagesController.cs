@@ -171,43 +171,44 @@ namespace gym.Controllers
         public async Task<IActionResult> RegisterPackage(int packageId)
         {
             var package = await _context.Packages.FindAsync(packageId);
-            if (package == null)
-                return NotFound();
+            if (package == null) return NotFound();
+
+            if (package.Type == "Huấn luyện cá nhân")
+            {
+                ViewBag.Trainers = await _context.Trainers.ToListAsync();
+            }
 
             return View(package);
         }
 
+
         [Authorize(Roles = "Member")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmRegister(int packageId)
+        public async Task<IActionResult> ConfirmRegister(int packageId, int? trainerId)
         {
             string? username = User.Identity?.Name;
-            if (string.IsNullOrEmpty(username))
-                throw new Exception("❌ Không xác định được tài khoản.");
+            if (string.IsNullOrEmpty(username)) throw new Exception("❌ Không xác định được tài khoản.");
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username && u.RoleId == 2);
-            if (user == null)
-                throw new Exception($"❌ Không tìm thấy user có username = {username}");
+            if (user == null) throw new Exception($"❌ Không tìm thấy user có username = {username}");
 
             int memberId = (int)user.ReferenceId;
             var member = await _context.Members.FindAsync(memberId);
-            if (member == null)
-                throw new Exception($"❌ Không tìm thấy Member với ID = {memberId}");
-
             var package = await _context.Packages.FindAsync(packageId);
-            if (package == null)
-                throw new Exception($"❌ Gói tập không tồn tại.");
 
+            if (member == null || package == null) return NotFound();
+
+            // Kiểm tra đã đăng ký chưa
             var hasActive = await _context.MemberPakages
-                .AnyAsync(mp => mp.MemberId == memberId && mp.PackageId == packageId && mp.IsActive==true);
-
+                .AnyAsync(mp => mp.MemberId == memberId && mp.PackageId == packageId && mp.IsActive == true);
             if (hasActive)
             {
                 TempData["Error"] = "Bạn đã đăng ký gói này rồi.";
                 return RedirectToAction(nameof(Index));
             }
 
+            // Đăng ký mới
             var memberPackage = new MemberPakage
             {
                 MemberId = memberId,
@@ -219,8 +220,45 @@ namespace gym.Controllers
             };
 
             _context.MemberPakages.Add(memberPackage);
-            await _context.SaveChangesAsync();
 
+            // Nếu là gói huấn luyện cá nhân -> Thêm Trainer + Payment
+            if (package.Type == "Huấn luyện cá nhân" && trainerId != null)
+            {
+                // Thêm TrainingSchedule
+                var schedule = new TrainingSchedule
+                {
+                    MemberId = memberId,
+                    TrainerId = trainerId.Value,
+                    TrainingDate = null,
+                    StartTime = null,
+                    EndTime = null,
+                    Node = null
+                };
+                _context.TrainingSchedules.Add(schedule);
+
+                // Thêm Payment
+                var payment = new Payment
+                {
+                    Total = package.Price ?? 0,
+                    IsPaid = false,
+                    DueDate = DateTime.Now.AddDays(10)
+                };
+                _context.Payments.Add(payment);
+                await _context.SaveChangesAsync(); // để lấy được paymentId
+
+                // Thêm MemberPayment
+                var memberPayment = new MemberPayment
+                {
+                    MemberId = memberId,
+                    PaymentId = payment.PaymentId,
+                    PaymentDate = null,
+                    StaffId = null,
+                    Staff = null // ✅ Thêm dòng này để EF biết không có Staff liên quan
+                };
+                _context.MemberPayments.Add(memberPayment);
+                await _context.SaveChangesAsync();
+            }
+            await _context.SaveChangesAsync();
             TempData["Success"] = "Đăng ký thành công!";
             return RedirectToAction(nameof(Index));
         }
