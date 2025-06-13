@@ -3,6 +3,7 @@ using DinkToPdf.Contracts; //Install - Package DinkToPdf.Contracts
 using gym.Data;
 using gym.Models;
 using gym.Services;
+using gym.Services.Vnpay;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,7 @@ namespace gym
             builder.Services.Configure<OpenAIConfig>(
                 builder.Configuration.GetSection("OpenAI"));
             builder.Services.AddHttpClient<IChatBotService, ChatBotService>();
-
+            builder.Services.AddScoped<IVnPayService, VnPayService>();// Connect VNPay API
             builder.Services.AddScoped<EmailService>();
 
             builder.Services.AddSession();
