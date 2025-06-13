@@ -645,3 +645,21 @@ go
 ALTER TABLE [GYM].[dbo].[Payment]
 ADD isPaid BIT NOT NULL DEFAULT 0,
     dueDate DATE NULL;
+
+
+
+
+
+-- Xoá primary key
+ALTER TABLE MemberPayment DROP CONSTRAINT PK_MEMBERPAYMENT;
+
+-- Thay đổi cột cho phép null
+ALTER TABLE MemberPayment ALTER COLUMN staffId INT NULL;
+
+-- Tạo lại PK (ví dụ chỉ dùng MemberId và PaymentId)
+ALTER TABLE MemberPayment ADD CONSTRAINT PK_MEMBERPAYMENT PRIMARY KEY (MemberId, PaymentId);
+
+-- Cho phép null
+ALTER TABLE MemberPayment
+ADD CONSTRAINT FK_MemberPayment_Staff FOREIGN KEY (staffId)
+REFERENCES Staff(StaffId);

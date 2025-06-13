@@ -107,7 +107,7 @@ public partial class GymContext : DbContext
 
         modelBuilder.Entity<MemberPayment>(entity =>
         {
-            entity.HasKey(e => new { e.MemberId, e.PaymentId, e.StaffId }).HasName("PK_MEMBERPAYMENT");
+            entity.HasKey(e => new { e.MemberId, e.PaymentId }).HasName("PK_MEMBERPAYMENT");
 
             entity.ToTable("MemberPayment");
 
@@ -119,7 +119,15 @@ public partial class GymContext : DbContext
 
             entity.Property(e => e.MemberId).HasColumnName("memberId");
             entity.Property(e => e.PaymentId).HasColumnName("paymentId");
-            entity.Property(e => e.StaffId).HasColumnName("staffId");
+            //entity.Property(e => e.StaffId).HasColumnName("staffId");
+            entity.Property(e => e.StaffId)
+                .HasColumnName("staffId"); // KHÔNG cần thêm gì khác
+
+            entity.HasOne(e => e.Staff)
+                .WithMany()
+                .HasForeignKey(e => e.StaffId)
+                .IsRequired(false); // <-- Đây là phần QUAN TRỌNG để cho phép null
+
             entity.Property(e => e.PaymentDate)
                 .HasColumnType("datetime")
                 .HasColumnName("paymentDate");

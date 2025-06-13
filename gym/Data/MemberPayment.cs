@@ -9,7 +9,7 @@ public partial class MemberPayment
 
     public int PaymentId { get; set; }
 
-    public int StaffId { get; set; }
+    public int? StaffId { get; set; }
 
     public DateTime? PaymentDate { get; set; }
 
@@ -17,5 +17,5 @@ public partial class MemberPayment
 
     public virtual Payment Payment { get; set; } = null!;
 
-    public virtual Staff Staff { get; set; } = null!;
+    public virtual Staff? Staff { get; set; }
 }
