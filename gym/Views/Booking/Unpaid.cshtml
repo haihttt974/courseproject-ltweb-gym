@@ -34,11 +34,8 @@ else
                         <td>@item.DueDate?.ToString("dd/MM/yyyy")</td>
                         <td>@item.Description</td>
                         <td>
-                            <form asp-controller="Payment" asp-action="CreatePaymentUrlVnpay" method="post">
-                                <input type="hidden" name="OrderType" value="billpayment" />
-                                <input type="hidden" name="Amount" value="@item.Total" />
-                                <input type="hidden" name="OrderDescription" value="Thanh toán gói tập - PaymentId:@item.PaymentId" />
-                                <input type="hidden" name="Name" value="PaymentId:@item.PaymentId" />
+                            <form asp-controller="Payment" asp-action="Checkout" method="post">
+                                <input type="hidden" name="paymentId" value="@item.PaymentId" />
                                 <button type="submit" class="btn btn-success btn-sm">Thanh toán</button>
                             </form>
                         </td>

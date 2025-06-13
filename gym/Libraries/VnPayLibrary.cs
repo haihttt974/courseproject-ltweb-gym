@@ -1,84 +1,21 @@
-﻿using gym.Models.Vnpay;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net;
-using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace gym.Libraries
+namespace gym.VnPay
 {
     public class VnPayLibrary
     {
-        private readonly SortedList<string, string> _requestData = new SortedList<string, string>(new VnPayCompare());
-        private readonly SortedList<string, string> _responseData = new SortedList<string, string>(new VnPayCompare());
+        public const string VERSION = "2.1.0";
+        private SortedList<string, string> _requestData = new SortedList<string, string>(new VnPayCompare());
+        private SortedList<string, string> _responseData = new SortedList<string, string>(new VnPayCompare());
 
-        public PaymentResponseModel GetFullResponseData(IQueryCollection collection, string hashSecret)
-        {
-            var vnPay = new VnPayLibrary();
-            foreach (var (key, value) in collection)
-            {
-                if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
-                {
-                    vnPay.AddResponseData(key, value);
-                }
-            }
-            var orderId = Convert.ToInt64(vnPay.GetResponseData("vnp_TxnRef"));
-            var vnPayTranId = Convert.ToInt64(vnPay.GetResponseData("vnp_TransactionNo"));
-            var vnpResponseCode = vnPay.GetResponseData("vnp_ResponseCode");
-            var vnpSecureHash =
-                collection.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value; //hash của dữ liệu trả về
-            var orderInfo = vnPay.GetResponseData("vnp_OrderInfo");
-            var checkSignature =
-                vnPay.ValidateSignature(vnpSecureHash, hashSecret); //check Signature
-            if (!checkSignature)
-                return new PaymentResponseModel()
-                {
-                    Success = false
-                };
-            return new PaymentResponseModel()
-            {
-                Success = true,
-                PaymentMethod = "VnPay",
-                OrderDescription = orderInfo,
-                OrderId = orderId.ToString(),
-                PaymentId = vnPayTranId.ToString(),
-                TransactionId = vnPayTranId.ToString(),
-                Token = vnpSecureHash,
-                VnPayResponseCode = vnpResponseCode
-            };
-        }
-        public string GetIpAddress(HttpContext context)
-        {
-            var ipAddress = string.Empty;
-            try
-            {
-                var remoteIpAddress = context.Connection.RemoteIpAddress;
-
-                if (remoteIpAddress != null)
-                {
-                    if (remoteIpAddress.AddressFamily == AddressFamily.InterNetworkV6)
-                    {
-                        remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList
-                            .FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
-                    }
-
-                    if (remoteIpAddress != null) ipAddress = remoteIpAddress.ToString();
-
-                    return ipAddress;
-                }
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-
-            return "127.0.0.1";
-        }
         public void AddRequestData(string key, string value)
         {
             if (!string.IsNullOrEmpty(value))
             {
-                _requestData.Add(key, value);
+                _requestData[key] = value;
             }
         }
 
@@ -86,40 +23,21 @@ namespace gym.Libraries
         {
             if (!string.IsNullOrEmpty(value))
             {
-                _responseData.Add(key, value);
+                _responseData[key] = value;
             }
         }
+
         public string GetResponseData(string key)
         {
             return _responseData.TryGetValue(key, out var retValue) ? retValue : string.Empty;
         }
-        //public string CreateRequestUrl(string baseUrl, string vnpHashSecret)
-        //{
-        //    var data = new StringBuilder();
 
-        //    foreach (var (key, value) in _requestData.Where(kv => !string.IsNullOrEmpty(kv.Value)))
-        //    {
-        //        data.Append(WebUtility.UrlEncode(key) + "=" + WebUtility.UrlEncode(value) + "&");
-        //    }
+        #region Request
 
-        //    var querystring = data.ToString();
-
-        //    baseUrl += "?" + querystring;
-        //    var signData = querystring;
-        //    if (signData.Length > 0)
-        //    {
-        //        signData = signData.Remove(data.Length - 1, 1);
-        //    }
-
-        //    var vnpSecureHash = HmacSha512(vnpHashSecret, signData);
-        //    baseUrl += "vnp_SecureHash=" + vnpSecureHash;
-
-        //    return baseUrl;
-        //}
-        public string CreateRequestUrl(string baseUrl, string vnpHashSecret)
+        public string CreateRequestUrl(string baseUrl, string vnp_HashSecret)
         {
             var data = new StringBuilder();
-            foreach (var kv in _requestData)
+            foreach (KeyValuePair<string, string> kv in _requestData)
             {
                 if (!string.IsNullOrEmpty(kv.Value))
                 {
@@ -127,70 +45,52 @@ namespace gym.Libraries
                 }
             }
 
-            var queryString = data.ToString().TrimEnd('&');
+            string queryString = data.ToString();
+            string signData = queryString;
 
-            // Tạo raw data để hash
-            var rawData = string.Join("&", _requestData
-                .Where(kv => !string.IsNullOrEmpty(kv.Value))
-                .Select(kv => $"{kv.Key}={kv.Value}"));
+            if (signData.Length > 0)
+            {
+                signData = signData.Remove(signData.Length - 1, 1); // remove last &
+            }
 
-            var vnpSecureHash = HmacSha512(vnpHashSecret, rawData);
-            var fullUrl = $"{baseUrl}?{queryString}&vnp_SecureHash={vnpSecureHash}";
+            string vnp_SecureHash = Utils.HmacSHA512(vnp_HashSecret, signData);
+            string fullUrl = baseUrl + "?" + queryString + "vnp_SecureHash=" + vnp_SecureHash;
 
             return fullUrl;
         }
-        private string HmacSha512(string key, string inputData)
-        {
-            var keyBytes = Encoding.UTF8.GetBytes(key);
-            var inputBytes = Encoding.UTF8.GetBytes(inputData);
-            using (var hmac = new HMACSHA512(keyBytes))
-            {
-                var hashValue = hmac.ComputeHash(inputBytes);
-                return BitConverter.ToString(hashValue).Replace("-", "").ToLower();
-            }
-        }
+
+        #endregion Request
+
+        #region Response
 
         public bool ValidateSignature(string inputHash, string secretKey)
         {
-            var rspRaw = GetResponseData();
-            var myChecksum = HmacSha512(secretKey, rspRaw);
+            string rspRaw = GetResponseDataString();
+            string myChecksum = Utils.HmacSHA512(secretKey, rspRaw);
             return myChecksum.Equals(inputHash, StringComparison.InvariantCultureIgnoreCase);
         }
-        //private string HmacSha512(string key, string inputData)
-        //{
-        //    var hash = new StringBuilder();
-        //    var keyBytes = Encoding.UTF8.GetBytes(key);
-        //    var inputBytes = Encoding.UTF8.GetBytes(inputData);
-        //    using (var hmac = new HMACSHA512(keyBytes))
-        //    {
-        //        var hashValue = hmac.ComputeHash(inputBytes);
-        //        foreach (var theByte in hashValue)
-        //        {
-        //            hash.Append(theByte.ToString("x2"));
-        //        }
-        //    }
 
-        //    return hash.ToString();
-        //}
-        private string GetResponseData()
+        private string GetResponseDataString()
         {
             var data = new StringBuilder();
+
             if (_responseData.ContainsKey("vnp_SecureHashType"))
             {
                 _responseData.Remove("vnp_SecureHashType");
             }
-
             if (_responseData.ContainsKey("vnp_SecureHash"))
             {
                 _responseData.Remove("vnp_SecureHash");
             }
 
-            foreach (var (key, value) in _responseData.Where(kv => !string.IsNullOrEmpty(kv.Value)))
+            foreach (KeyValuePair<string, string> kv in _responseData)
             {
-                data.Append(WebUtility.UrlEncode(key) + "=" + WebUtility.UrlEncode(value) + "&");
+                if (!string.IsNullOrEmpty(kv.Value))
+                {
+                    data.Append(WebUtility.UrlEncode(kv.Key) + "=" + WebUtility.UrlEncode(kv.Value) + "&");
+                }
             }
 
-            //remove last '&'
             if (data.Length > 0)
             {
                 data.Remove(data.Length - 1, 1);
@@ -198,16 +98,40 @@ namespace gym.Libraries
 
             return data.ToString();
         }
+
+        #endregion Response
     }
-}
-public class VnPayCompare : IComparer<string>
-{
-    public int Compare(string x, string y)
+
+    public static class Utils
     {
-        if (x == y) return 0;
-        if (x == null) return -1;
-        if (y == null) return 1;
-        var vnpCompare = CompareInfo.GetCompareInfo("en-US");
-        return vnpCompare.Compare(x, y, CompareOptions.Ordinal);
+        public static string HmacSHA512(string key, string inputData)
+        {
+            var hash = new StringBuilder();
+            byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+            byte[] inputBytes = Encoding.UTF8.GetBytes(inputData);
+
+            using (var hmac = new HMACSHA512(keyBytes))
+            {
+                byte[] hashValue = hmac.ComputeHash(inputBytes);
+                foreach (var theByte in hashValue)
+                {
+                    hash.Append(theByte.ToString("x2"));
+                }
+            }
+
+            return hash.ToString();
+        }
+    }
+
+    public class VnPayCompare : IComparer<string>
+    {
+        public int Compare(string x, string y)
+        {
+            if (x == y) return 0;
+            if (x == null) return -1;
+            if (y == null) return 1;
+            var vnpCompare = CompareInfo.GetCompareInfo("en-US");
+            return vnpCompare.Compare(x, y, CompareOptions.Ordinal);
+        }
     }
 }
