@@ -585,7 +585,7 @@ VALUES
 (8, 8, '2025-06-15', '2025-06-15 07:00:00', '2025-06-15 09:00:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h'),
 (8, 10, '2025-06-15', '2025-06-15 09:30:00', '2025-06-15 11:30:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h'),
 (8, 6, '2025-06-15', '2025-06-15 15:00:00', '2025-06-15 17:00:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h');
-
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -595,7 +595,7 @@ VALUES
 (8, 18, '2025-06-15', '2025-06-15 07:00:00', '2025-06-15 09:00:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h'),
 (8, 20, '2025-06-15', '2025-06-15 09:30:00', '2025-06-15 11:30:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h'),
 (8, 16, '2025-06-15', '2025-06-15 15:00:00', '2025-06-15 17:00:00', N'Tập gym tăng cơ - Thứ 3-7: 7h-11h, 15h-19h');
-
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 -- Thêm ràng buộc (Vì insert dữ liệu rồi nên không thêm trực tiếp được, phải cho null col Type sau đó thêm ràng buộc rồi thêm Type vào)
@@ -617,3 +617,16 @@ SET [type] =
         ELSE N'Tiêu chuẩn' -- Giá trị mặc định cho các gói không xác định
     END
 WHERE [type] IS NULL;
+
+-- Thêm isActive (default true) vào package để ẩn những gói nào không còn áp dụng nữa.
+ALTER TABLE [GYM].[dbo].[Package]
+ADD isActive BIT NOT NULL DEFAULT 1;
+
+-- Thêm image vào Trainer 
+ALTER TABLE [GYM].[dbo].[Trainer]
+ADD image NVARCHAR(255) NULL;
+
+-- Thêm Note vs Description vào Payment
+ALTER TABLE [GYM].[dbo].[Payment]
+ADD note NVARCHAR(255) NULL,
+    description NVARCHAR(255) NULL;

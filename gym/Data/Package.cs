@@ -16,6 +16,7 @@ public partial class Package
     public int? DurationInDays { get; set; }
 
     public string? Description { get; set; }
+    public bool IsActive { get; set; } = true;
 
     public virtual ICollection<MemberPakage> MemberPakages { get; set; } = new List<MemberPakage>();
 }
