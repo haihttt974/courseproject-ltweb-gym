@@ -2,6 +2,7 @@
 using gym.Models;
 using gym.VnPay;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace gym.Controllers
@@ -52,7 +53,6 @@ namespace gym.Controllers
             return Redirect(paymentUrl);
         }
 
-
         public async Task<IActionResult> VnPayReturn()
         {
             var vnpay = new VnPayLibrary();
@@ -97,7 +97,26 @@ namespace gym.Controllers
                 if (!payment.IsPaid)
                 {
                     payment.IsPaid = true;
+                    payment.Method = "VNPay";
                     payment.Note = "Thanh toán thành công qua VNPay.";
+                    // Cập nhật cho paymentdate trong memberPayment
+                    var memberPayment = await _context.MemberPayments
+                        .FirstOrDefaultAsync(mp => mp.PaymentId == payment.PaymentId);
+                    if (memberPayment != null)
+                    {
+                        memberPayment.PaymentDate = DateTime.Now;
+                    }
+
+                    // Cập nhật cho isPaid trong MemberPakage
+                    var memberPakage = await _context.MemberPakages
+                        .FirstOrDefaultAsync(mp => mp.PaymentId == payment.PaymentId);
+                    if (memberPakage != null)
+                    {
+                        memberPakage.IsPaid = true;
+                        memberPakage.IsActive = true;
+                        await _context.SaveChangesAsync();
+                    }
+
                     await _context.SaveChangesAsync();
                 }
 
@@ -113,6 +132,5 @@ namespace gym.Controllers
             ViewBag.Message = $"Thanh toán không thành công. Mã lỗi: {responseCode}";
             return View("PaymentFailed");
         }
-
     }
 }

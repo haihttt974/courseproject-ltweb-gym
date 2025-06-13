@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace gym.Data;
@@ -20,4 +20,6 @@ public partial class MemberPakage
     public virtual Member Member { get; set; } = null!;
 
     public virtual Package Package { get; set; } = null!;
+    public int PaymentId { get; set; } // nếu bạn dùng bắt buộc
+    public Payment Payment { get; set; }
 }
