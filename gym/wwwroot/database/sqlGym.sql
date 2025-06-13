@@ -663,3 +663,13 @@ ALTER TABLE MemberPayment ADD CONSTRAINT PK_MEMBERPAYMENT PRIMARY KEY (MemberId,
 ALTER TABLE MemberPayment
 ADD CONSTRAINT FK_MemberPayment_Staff FOREIGN KEY (staffId)
 REFERENCES Staff(StaffId);
+
+
+-- Thêm liên kết giữa MemberPackage với Payment
+ALTER TABLE MemberPakage
+ADD paymentId INT NULL;
+
+-- (Optional) Thêm khóa ngoại nếu muốn ràng buộc
+ALTER TABLE MemberPakage
+ADD CONSTRAINT FK_MemberPakage_Payment
+FOREIGN KEY (paymentId) REFERENCES Payment(paymentId);

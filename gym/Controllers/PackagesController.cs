@@ -199,7 +199,7 @@ namespace gym.Controllers
 
             if (member == null || package == null) return NotFound();
 
-            // Kiểm tra đã đăng ký chưa
+            // ❗ Kiểm tra đã đăng ký gói này chưa
             var hasActive = await _context.MemberPakages
                 .AnyAsync(mp => mp.MemberId == memberId && mp.PackageId == packageId && mp.IsActive == true);
             if (hasActive)
@@ -208,7 +208,17 @@ namespace gym.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Đăng ký mới
+            // ✅ Tạo Payment trước
+            var payment = new Payment
+            {
+                Total = package.Price ?? 0,
+                IsPaid = false,
+                DueDate = DateTime.Now.AddDays(10)
+            };
+            _context.Payments.Add(payment);
+            await _context.SaveChangesAsync(); // lấy được PaymentId
+
+            // ✅ Tạo MemberPackage và gán PaymentId
             var memberPackage = new MemberPakage
             {
                 MemberId = memberId,
@@ -216,15 +226,24 @@ namespace gym.Controllers
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now.AddDays(package.DurationInDays ?? 0),
                 IsPaid = false,
-                IsActive = true
+                IsActive = true,
+                PaymentId = payment.PaymentId // GÁN ở đây!
             };
-
             _context.MemberPakages.Add(memberPackage);
 
-            // Nếu là gói huấn luyện cá nhân -> Thêm Trainer + Payment
-            if (package.Type == "Huấn luyện cá nhân" && trainerId != null)
+            // ✅ Tạo MemberPayment
+            var memberPayment = new MemberPayment
             {
-                // Thêm TrainingSchedule
+                MemberId = memberId,
+                PaymentId = payment.PaymentId,
+                PaymentDate = null,
+                StaffId = null
+            };
+            _context.MemberPayments.Add(memberPayment);
+
+            // ✅ Nếu có Trainer → tạo TrainingSchedule
+            if ((package.Type == "Huấn luyện cá nhân" || package.Type == "Huấn luyện nhóm") && trainerId != null)
+            {
                 var schedule = new TrainingSchedule
                 {
                     MemberId = memberId,
@@ -235,54 +254,12 @@ namespace gym.Controllers
                     Node = null
                 };
                 _context.TrainingSchedules.Add(schedule);
-
-                // Thêm Payment
-                var payment = new Payment
-                {
-                    Total = package.Price ?? 0,
-                    IsPaid = false,
-                    DueDate = DateTime.Now.AddDays(10)
-                };
-                _context.Payments.Add(payment);
-                await _context.SaveChangesAsync(); // để lấy được paymentId
-
-                // Thêm MemberPayment
-                var memberPayment = new MemberPayment
-                {
-                    MemberId = memberId,
-                    PaymentId = payment.PaymentId,
-                    PaymentDate = null,
-                    StaffId = null,
-                    Staff = null
-                };
-                _context.MemberPayments.Add(memberPayment);
-                await _context.SaveChangesAsync();
             }
-            else
-            {
-                // Thêm Payment
-                var payment = new Payment
-                {
-                    Total = package.Price ?? 0,
-                    IsPaid = false,
-                    DueDate = DateTime.Now.AddDays(10)
-                };
-                _context.Payments.Add(payment);
-                await _context.SaveChangesAsync(); // để lấy được paymentId
 
-                // Thêm MemberPayment
-                var memberPayment = new MemberPayment
-                {
-                    MemberId = memberId,
-                    PaymentId = payment.PaymentId,
-                    PaymentDate = null,
-                    StaffId = null,
-                    Staff = null
-                };
-                _context.MemberPayments.Add(memberPayment);
-                await _context.SaveChangesAsync();
-            }
+            // ✅ Lưu tất cả
             await _context.SaveChangesAsync();
+
+            // ✅ Toast Notification
             TempData["Success"] = "Đăng ký thành công!";
             return RedirectToAction(nameof(Index));
         }

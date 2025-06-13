@@ -103,6 +103,11 @@ public partial class GymContext : DbContext
                 .HasForeignKey(d => d.PackageId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MEMBERPA_MEMBERPAK_PACKAGE");
+            // ✅ Thêm quan hệ với bảng Payment
+            entity.HasOne(d => d.Payment)
+                .WithMany() // Nếu 1 payment gắn 1 MemberPakage → dùng WithOne()
+                .HasForeignKey(d => d.PaymentId)
+                .HasConstraintName("FK_MEMBERPA_MEMBERPAK_PAYMENT");
         });
 
         modelBuilder.Entity<MemberPayment>(entity =>
