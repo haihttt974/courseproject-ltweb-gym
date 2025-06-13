@@ -197,9 +197,9 @@ public partial class GymContext : DbContext
             entity.ToTable("Payment");
 
             entity.Property(e => e.PaymentId).HasColumnName("paymentId");
-            entity.Property(e => e.Amount)
+            entity.Property(e => e.Total)
                 .HasColumnType("decimal(10, 2)")
-                .HasColumnName("amount");
+                .HasColumnName("total");
             entity.Property(e => e.Method)
                 .HasMaxLength(100)
                 .HasColumnName("method");
@@ -211,6 +211,12 @@ public partial class GymContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .HasColumnName("description");
+            entity.Property(e => e.IsPaid)
+                .HasColumnName("isPaid")
+                .HasDefaultValue(false);
+
+            entity.Property(e => e.DueDate)
+                .HasColumnName("dueDate");
         });
 
         modelBuilder.Entity<Role>(entity =>
