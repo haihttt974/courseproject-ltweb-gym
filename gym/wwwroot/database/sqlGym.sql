@@ -603,10 +603,12 @@ VALUES
 UPDATE [GYM].[dbo].[Package]
 SET [type] = null
 WHERE [type] NOT IN (N'...');
+go
 -- ràng buộc
 ALTER TABLE [GYM].[dbo].[Package]
 ADD CONSTRAINT CHK_Package_Type 
 CHECK ([type] IN (N'Tiêu chuẩn', N'Huấn luyện cá nhân', N'Nhóm', N'Huấn luyện nhóm'));
+go
 -- thêm lại type
 UPDATE [GYM].[dbo].[Package]
 SET [type] = 
@@ -617,15 +619,15 @@ SET [type] =
         ELSE N'Tiêu chuẩn' -- Giá trị mặc định cho các gói không xác định
     END
 WHERE [type] IS NULL;
-
+go
 -- Thêm isActive (default true) vào package để ẩn những gói nào không còn áp dụng nữa.
 ALTER TABLE [GYM].[dbo].[Package]
 ADD isActive BIT NOT NULL DEFAULT 1;
-
+go
 -- Thêm image vào Trainer 
 ALTER TABLE [GYM].[dbo].[Trainer]
 ADD image NVARCHAR(255) NULL;
-
+go
 -- Thêm Note vs Description vào Payment
 ALTER TABLE [GYM].[dbo].[Payment]
 ADD note NVARCHAR(255) NULL,
