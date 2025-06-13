@@ -632,3 +632,16 @@ go
 ALTER TABLE [GYM].[dbo].[Payment]
 ADD note NVARCHAR(255) NULL,
     description NVARCHAR(255) NULL;
+
+-- Đổi thuộc tính amount thành total trong Payment
+EXEC sp_rename 
+    '[GYM].[dbo].[Payment].amount', 
+    'total', 
+    'COLUMN';
+go
+
+-- Thêm isPaid trong Payment
+-- Thêm dueDate trong Payment
+ALTER TABLE [GYM].[dbo].[Payment]
+ADD isPaid BIT NOT NULL DEFAULT 0,
+    dueDate DATE NULL;
