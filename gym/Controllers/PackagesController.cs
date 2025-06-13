@@ -258,6 +258,30 @@ namespace gym.Controllers
                 _context.MemberPayments.Add(memberPayment);
                 await _context.SaveChangesAsync();
             }
+            else
+            {
+                // Thêm Payment
+                var payment = new Payment
+                {
+                    Total = package.Price ?? 0,
+                    IsPaid = false,
+                    DueDate = DateTime.Now.AddDays(10)
+                };
+                _context.Payments.Add(payment);
+                await _context.SaveChangesAsync(); // để lấy được paymentId
+
+                // Thêm MemberPayment
+                var memberPayment = new MemberPayment
+                {
+                    MemberId = memberId,
+                    PaymentId = payment.PaymentId,
+                    PaymentDate = null,
+                    StaffId = null,
+                    Staff = null
+                };
+                _context.MemberPayments.Add(memberPayment);
+                await _context.SaveChangesAsync();
+            }
             await _context.SaveChangesAsync();
             TempData["Success"] = "Đăng ký thành công!";
             return RedirectToAction(nameof(Index));
