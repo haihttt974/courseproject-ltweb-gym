@@ -10,6 +10,8 @@ public partial class Payment
     public decimal? Amount { get; set; }
 
     public string? Method { get; set; }
+    public string? Note { get; set; }
+    public string? Description { get; set; }
 
     public virtual ICollection<MemberPayment> MemberPayments { get; set; } = new List<MemberPayment>();
 }

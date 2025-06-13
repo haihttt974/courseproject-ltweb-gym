@@ -24,12 +24,14 @@ namespace gym.Controllers
         // GET: Packages
         public async Task<IActionResult> Index()
         {
-            var packages = await _context.Packages
+            var activePackages = await _context.Packages
+                .Where(p => p.IsActive)
                 .Include(p => p.MemberPakages)
                 .ToListAsync();
 
-            return View(packages);
+            return View(activePackages);
         }
+
         public async Task<IActionResult> Admin()
         {
             return View(await _context.Packages.ToListAsync());

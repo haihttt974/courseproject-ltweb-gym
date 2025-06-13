@@ -14,6 +14,7 @@ public partial class Trainer
     public string? Specialty { get; set; }
 
     public string? ScheduleNote { get; set; }
+    public string? Image { get; set; }
 
     public virtual ICollection<TrainingSchedule> TrainingSchedules { get; set; } = new List<TrainingSchedule>();
 }

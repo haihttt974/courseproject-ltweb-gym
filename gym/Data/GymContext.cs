@@ -183,6 +183,9 @@ public partial class GymContext : DbContext
             entity.Property(e => e.Type)
                 .HasMaxLength(100)
                 .HasColumnName("type");
+            entity.Property(e => e.IsActive)
+                .HasColumnName("isActive")
+                .HasDefaultValue(true);
         });
 
         modelBuilder.Entity<Payment>(entity =>
@@ -200,6 +203,14 @@ public partial class GymContext : DbContext
             entity.Property(e => e.Method)
                 .HasMaxLength(100)
                 .HasColumnName("method");
+
+            entity.Property(e => e.Note)
+                .HasMaxLength(255)
+                .HasColumnName("note");
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .HasColumnName("description");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -265,6 +276,9 @@ public partial class GymContext : DbContext
             entity.Property(e => e.Specialty)
                 .HasMaxLength(255)
                 .HasColumnName("specialty");
+            entity.Property(e => e.Image)
+                .HasMaxLength(255)
+                .HasColumnName("image");
         });
 
         modelBuilder.Entity<TrainingSchedule>(entity =>
