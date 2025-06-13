@@ -253,7 +253,7 @@ namespace gym.Controllers
                     PaymentId = payment.PaymentId,
                     PaymentDate = null,
                     StaffId = null,
-                    Staff = null // ✅ Thêm dòng này để EF biết không có Staff liên quan
+                    Staff = null
                 };
                 _context.MemberPayments.Add(memberPayment);
                 await _context.SaveChangesAsync();
