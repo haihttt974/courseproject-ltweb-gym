@@ -4,26 +4,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="mb-4">Danh sách Gói Tập</h2>
+<h2 class="mb-4 text-center text-uppercase text-success">Danh sách Gói Tập</h2>
 
 <div class="row">
     @foreach (var item in Model)
     {
         <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
+            <div class="card h-100 shadow-lg border-0">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title text-primary">@item.Name</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">@item.Type</h6>
-                    <p class="card-text mt-2">
-                        <strong>Giá:</strong> @item.Price?.ToString("N0") VNĐ<br />
-                        <strong>Thời gian:</strong> @item.DurationInDays ngày<br />
-                        <strong>Đã đăng ký:</strong> @item.MemberPakages.Count người
-                    </p>
-                    <p class="card-text text-secondary small">@item.Description</p>
+                    <h5 class="card-title text-primary fw-bold">@item.Name</h5>
+                    <h6 class="card-subtitle text-muted mb-2">@item.Type</h6>
+                    <hr />
+                    <ul class="list-unstyled mb-3">
+                        <li><strong>💰 Giá:</strong> @item.Price?.ToString("N0") VNĐ</li>
+                        <li><strong>🕒 Thời gian:</strong> @item.DurationInDays ngày</li>
+                        <li><strong>👥 Đã đăng ký:</strong> @item.MemberPakages.Count người</li>
+                    </ul>
+                    <p class="text-secondary small flex-grow-1">@item.Description</p>
 
-                    <form asp-action="Register" method="post" class="mt-auto">
+                    <form asp-action="RegisterPackage" method="get" class="mt-auto">
                         <input type="hidden" name="packageId" value="@item.PackageId" />
-                        <button type="submit" class="btn btn-success w-100">Đăng ký</button>
+                        <button type="submit" class="btn btn-outline-primary w-100">Chi tiết & Đăng ký</button>
                     </form>
                 </div>
             </div>
