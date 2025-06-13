@@ -20,7 +20,7 @@ namespace gym
             builder.Services.Configure<OpenAIConfig>(
                 builder.Configuration.GetSection("OpenAI"));
             builder.Services.AddHttpClient<IChatBotService, ChatBotService>();
-
+            builder.Services.Configure<VnPaySettings>(builder.Configuration.GetSection("VnPay"));
             builder.Services.AddScoped<EmailService>();
 
             builder.Services.AddSession();
