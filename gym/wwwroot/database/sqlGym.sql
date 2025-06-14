@@ -683,3 +683,45 @@ SET [Gender] = CASE
     WHEN trainerId IN (1, 3, 5, 6, 9) THEN 'true'
     ELSE 'false'
 END
+
+
+-- Thêm ảnh
+UPDATE [GYM].[dbo].[Trainer]
+SET [image] = 'images/van-loc.jpg'
+WHERE [fullName] = N'Nguyễn Văn Lộc';
+
+UPDATE [GYM].[dbo].[Trainer]
+SET [image] = 'images/thi-linh.jpg'
+WHERE [fullName] = N'Trần Thị Linh';
+
+UPDATE [GYM].[dbo].[Trainer]
+SET [image] = 'images/van-thien.jpg'
+WHERE [fullName] = N'Phạm Văn Thiên';
+
+UPDATE [GYM].[dbo].[Trainer]
+SET [image] = 'images/thi-thao.jpg'
+WHERE [fullName] = N'Lê Thị Thảo';
+
+UPDATE [GYM].[dbo].[Trainer]
+SET [image] = 'images/van-khoi.jpg'
+WHERE [fullName] = N'Hồ Văn Khôi';
+
+UPDATE [GYM].[dbo].[Trainer]
+SET [image] = 'images/duc-tuan.jpg'
+WHERE [fullName] = N'Vương Đức Tuấn';
+
+UPDATE [GYM].[dbo].[Trainer]
+SET [image] = 'images/thi-an.jpg'
+WHERE [fullName] = N'Đặng Thị An';
+
+UPDATE [GYM].[dbo].[Trainer]
+SET [image] = 'images/thi-thuy.jpg'
+WHERE [fullName] = N'Đỗ Thị Thủy';
+
+UPDATE [GYM].[dbo].[Trainer]
+SET [image] = 'images/hoang-phi.jpg'
+WHERE [fullName] = N'Trương Hoàng Phi';
+
+UPDATE [GYM].[dbo].[Trainer]
+SET [image] = 'images/thi-phuong.jpg'
+WHERE [fullName] = N'Bùi Thị Phương';
