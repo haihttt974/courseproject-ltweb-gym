@@ -298,6 +298,9 @@ public partial class GymContext : DbContext
             entity.Property(e => e.Image)
                 .HasMaxLength(255)
                 .HasColumnName("image");
+            entity.Property(e => e.Gender)
+              .HasColumnName("Gender")
+              .HasColumnType("bit");
         });
 
         modelBuilder.Entity<TrainingSchedule>(entity =>

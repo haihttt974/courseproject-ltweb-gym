@@ -673,3 +673,13 @@ ADD paymentId INT NULL;
 ALTER TABLE MemberPakage
 ADD CONSTRAINT FK_MemberPakage_Payment
 FOREIGN KEY (paymentId) REFERENCES Payment(paymentId);
+
+-- Thêm Gender vào Trainer
+ALTER TABLE Trainer
+ADD Gender BIT NULL;
+
+UPDATE [GYM].[dbo].[Trainer]
+SET [Gender] = CASE 
+    WHEN trainerId IN (1, 3, 5, 6, 9) THEN 'true'
+    ELSE 'false'
+END

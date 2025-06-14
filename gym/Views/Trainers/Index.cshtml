@@ -1,60 +1,95 @@
 ﻿@model IEnumerable<gym.Data.Trainer>
 
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Danh sách Huấn luyện viên";
+    var user = Context.User;
+    var isAdmin = user.IsInRole("Admin"); // hoặc kiểm tra roleId nếu bạn lưu claim roleId
+    Layout = isAdmin ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_Layout.cshtml";
+    string defaultAvatar = "/images/avt-default.png"; // Đường dẫn ảnh mặc định
 }
 
-<h1>Index</h1>
+<h1 class="mb-4 text-center">Danh sách Huấn luyện viên</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Specialty)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ScheduleNote)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Specialty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ScheduleNote)
-            </td>
-            <td>
-                    <img src="@item.Image" alt="@item.FullName" width="150" />
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TrainerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TrainerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TrainerId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="text-end mb-4">
+    <a asp-action="Create" class="btn btn-primary">➕ Thêm Huấn luyện viên</a>
+</div>
+
+<!-- FORM LỌC -->
+<div class="card mb-4 border-primary shadow-sm">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-funnel-fill me-2"></i>Bộ lọc tìm kiếm</h5>
+        <div class="d-flex gap-2">
+            <button class="btn btn-light btn-sm" type="submit" form="filterForm">
+                <i class="bi bi-search me-1"></i> Lọc
+            </button>
+            <a href="@Url.Action("Index")" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-x-circle me-1"></i> Reset
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <form id="filterForm" method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label"><i class="bi bi-person-fill me-1"></i>Tên HLV</label>
+                <input type="text" name="name" value="@Context.Request.Query["name"]" class="form-control" placeholder="Nhập tên..." />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"><i class="bi bi-telephone-fill me-1"></i>Số điện thoại</label>
+                <input type="text" name="phone" value="@Context.Request.Query["phone"]" class="form-control" placeholder="Nhập SĐT..." />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"><i class="bi bi-star-fill me-1"></i>Chuyên môn</label>
+                <input type="text" name="specialty" value="@Context.Request.Query["specialty"]" class="form-control" placeholder="VD: Yoga, Gym..." />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"><i class="bi bi-gender-ambiguous me-1"></i>Giới tính</label>
+                <select name="gender" class="form-select">
+                    <option value="">-- Chọn giới tính --</option>
+                    <option value="Nam" @@(Context.Request.Query["gender"] == "Nam" ? "selected" : "")>Nam</option>
+                    <option value="Nữ" @@(Context.Request.Query["gender"] == "Nữ" ? "selected" : "")>Nữ</option>
+                    <option value="Khác" @@(Context.Request.Query["gender"] == "Khác" ? "selected" : "")>Khác</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- DANH SÁCH DẠNG CARD -->
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var trainer in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <img src="@(string.IsNullOrEmpty(trainer.Image) ? defaultAvatar : trainer.Image)"
+                     class="card-img-top"
+                     alt="@trainer.FullName"
+                     style="object-fit: cover; height: 250px;" />
+
+                <div class="card-body">
+                    <h5 class="card-title">@trainer.FullName</h5>
+                    <p class="card-text mb-1">
+                        <strong>Giới tính:</strong>
+                        @{
+                            string genderText = trainer.Gender switch
+                            {
+                                true => "Nam",
+                                false => "Nữ",
+                                _ => "Khác"
+                            };
+                        }
+                        @genderText
+                    </p>
+                    <p class="card-text mb-1"><strong>Điện thoại:</strong> @trainer.Phone</p>
+                    <p class="card-text mb-1"><strong>Chuyên môn:</strong> @trainer.Specialty</p>
+                    <p class="card-text"><strong>Ghi chú lịch:</strong> @trainer.ScheduleNote</p>
+                </div>
+
+                <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
+                    <a asp-action="Details" asp-route-id="@trainer.TrainerId" class="btn btn-outline-info btn-sm">👁️ Xem</a>
+                    <a asp-action="Edit" asp-route-id="@trainer.TrainerId" class="btn btn-outline-secondary btn-sm">✏️ Sửa</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
