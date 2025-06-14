@@ -1,4 +1,5 @@
 ﻿using gym.Data;
+using gym.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -82,6 +83,52 @@ public class FeedbackController : Controller
             ViewData["Error"] = "Không thể tải phản hồi của bạn: " + ex.Message;
             return View(new List<Feedback>());
         }
+    }
+    [Authorize(Roles = "Admin,Staff")]
+    public async Task<IActionResult> List()
+    {
+        var feedbacks = await _context.Feedbacks
+            .Include(f => f.User)
+            .OrderByDescending(f => f.ThoiGian)
+            .ToListAsync();
+
+        var result = new List<FeedbackListViewModel>();
+
+        foreach (var f in feedbacks)
+        {
+            string tenNguoiPhanHoi = "";
+
+            switch (f.User.RoleId)
+            {
+                case 2: // Member
+                    var member = await _context.Members.FindAsync(f.User.ReferenceId);
+                    tenNguoiPhanHoi = member?.FullName ?? "(Không tìm thấy Member)";
+                    break;
+
+                case 3: // Staff
+                    var staff = await _context.Staff.FindAsync(f.User.ReferenceId);
+                    tenNguoiPhanHoi = staff?.FullName ?? "(Không tìm thấy Staff)";
+                    break;
+
+                case 4: // Trainer
+                    var trainer = await _context.Trainers.FindAsync(f.User.ReferenceId);
+                    tenNguoiPhanHoi = trainer?.FullName ?? "(Không tìm thấy Trainer)";
+                    break;
+
+                default:
+                    tenNguoiPhanHoi = "(Không rõ)";
+                    break;
+            }
+
+            result.Add(new FeedbackListViewModel
+            {
+                TenNguoiPhanHoi = tenNguoiPhanHoi,
+                NoiDung = f.Content ?? "",
+                ThoiGian = f.ThoiGian
+            });
+        }
+
+        return View(result);
     }
 
 }
