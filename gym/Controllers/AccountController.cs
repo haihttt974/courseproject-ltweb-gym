@@ -40,27 +40,54 @@ public class AccountController : Controller
 
         var user = await _context.Users
             .Include(u => u.Role)
-            .FirstOrDefaultAsync(u => u.UserName == model.UserName && u.IsAtive == true);
+            .FirstOrDefaultAsync(u => u.UserName == model.UserName);
 
-        if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
+        // Kiểm tra tên đăng nhập
+        if (user == null)
         {
-            ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không đúng");
+            TempData["Error"] = "Tên đăng nhập không tồn tại.";
             return View(model);
         }
 
-        var claims = new List<Claim>
+        // Kiểm tra tài khoản bị vô hiệu hóa
+        if (user.IsAtive == false)
         {
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Role, user.Role.RoleName),
-            new Claim("UserId", user.UserId.ToString())
-        };
+            TempData["Warning"] = "Tài khoản của bạn đã bị vô hiệu hóa.";
+            return View(model);
+        }
+
+        // Kiểm tra mật khẩu
+        if (!BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
+        {
+            TempData["Error"] = "Mật khẩu không chính xác.";
+            return View(model);
+        }
+
+        // Tạo danh sách claims
+        var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(ClaimTypes.Role, user.Role.RoleName),
+        new Claim("UserId", user.UserId.ToString())
+    };
 
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
             new ClaimsPrincipal(claimsIdentity));
 
-        return RedirectToAction("Index", "Home");
+        TempData["Success"] = $"Chào mừng {user.UserName} đăng nhập thành công!";
+
+        // Điều hướng theo role
+        if (user.Role.RoleName == "Admin")
+        {
+            return RedirectToAction("Dashboard", "Admin");
+        }
+        else
+        {
+            return RedirectToAction("Index", "Home");
+        }
     }
+
 
     // GET: Đăng ký
     [HttpGet]
