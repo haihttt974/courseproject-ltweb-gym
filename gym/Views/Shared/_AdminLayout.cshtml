@@ -624,6 +624,31 @@
                                 <p>Danh sách phản hồi</p>
                             </a>
                         </li>
+
+                        <li class="nav-item has-treeview @(isUsersController ? "menu-open" : "")">
+                            <a href="#" class="nav-link @(isUsersController ? "active" : "")">
+                                <i class="nav-icon fas fa-users-cog"></i>
+                                <p>
+                                    Thông báo
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a asp-controller="Notifications" asp-action="NotificationsSent" class="nav-link @(currentAction == "Index" && isUsersController ? "active" : "")">
+                                        <i class="far fa-list-alt nav-icon"></i>
+                                        <p>Thông báo đã gửi</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="Notifications" asp-action="Create" class="nav-link @(currentController == "Staffs" ? "active" : "")">
+                                        <i class="nav-icon fas fa-user-tie"></i>
+                                        <p>Tạo thông báo</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        
                     </ul>
                 </nav>
             </div>
