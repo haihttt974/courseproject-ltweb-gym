@@ -36,6 +36,7 @@ public partial class GymContext : DbContext
     public virtual DbSet<TrainingSchedule> TrainingSchedules { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Feedback> Feedbacks { get; set; }
 
     public virtual DbSet<UserNotification> UserNotifications { get; set; }
     //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

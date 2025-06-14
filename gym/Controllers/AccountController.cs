@@ -65,11 +65,11 @@ public class AccountController : Controller
 
         // Tạo danh sách claims
         var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.UserName),
-        new Claim(ClaimTypes.Role, user.Role.RoleName),
-        new Claim("UserId", user.UserId.ToString())
-    };
+        {
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Role, user.Role.RoleName),
+            new Claim("UserId", user.UserId.ToString())
+        };
 
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
