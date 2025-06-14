@@ -19,10 +19,38 @@ namespace gym.Controllers
         }
 
         // GET: Members
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? name, string? phone, string? address, string? sex)
         {
-            return View(await _context.Members.ToListAsync());
+            var members = _context.Members.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(name))
+                members = members.Where(m => m.FullName.Contains(name));
+
+            if (!string.IsNullOrWhiteSpace(phone))
+                members = members.Where(m => m.Phone.Contains(phone));
+
+            if (!string.IsNullOrWhiteSpace(address))
+                members = members.Where(m => m.Address.Contains(address));
+
+            if (!string.IsNullOrWhiteSpace(sex))
+            {
+                bool? sexBool = sex switch
+                {
+                    "Nam" => true,
+                    "Nữ" => false,
+                    _ => null
+                };
+
+                if (sexBool.HasValue)
+                    members = members.Where(m => m.Sex == sexBool);
+                else
+                    members = members.Where(m => m.Sex == null);
+            }
+
+            var result = await members.ToListAsync();
+            return View(result);
         }
+
 
         // GET: Members/Details/5
         public async Task<IActionResult> Details(int? id)

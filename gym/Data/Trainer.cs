@@ -15,6 +15,6 @@ public partial class Trainer
 
     public string? ScheduleNote { get; set; }
     public string? Image { get; set; }
-
+    public bool? Gender { get; set; }
     public virtual ICollection<TrainingSchedule> TrainingSchedules { get; set; } = new List<TrainingSchedule>();
 }

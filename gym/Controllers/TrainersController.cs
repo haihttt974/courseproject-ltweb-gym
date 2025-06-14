@@ -1,5 +1,6 @@
 ﻿using gym.Data;
 using gym.Models; // giả sử model nằm ở đây
+using gym.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,14 +23,38 @@ namespace gym.Controllers
 
         // -------------------- CRUD mặc định --------------------
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? name, string? phone, string? specialty, string? gender)
         {
-            return View(await _context.Trainers.ToListAsync());
-        }
+            var trainers = _context.Trainers.AsQueryable();
 
-        public async Task<IActionResult> Admin()
-        {
-            return View(await _context.Trainers.ToListAsync());
+            if (!string.IsNullOrWhiteSpace(name))
+                trainers = trainers.Where(t => t.FullName.Contains(name));
+
+            if (!string.IsNullOrWhiteSpace(phone))
+                trainers = trainers.Where(t => t.Phone.Contains(phone));
+
+            if (!string.IsNullOrWhiteSpace(specialty))
+                trainers = trainers.Where(t => t.Specialty.Contains(specialty));
+
+            if (!string.IsNullOrEmpty(gender))
+            {
+                bool? genderBool = gender switch
+                {
+                    "Nam" => true,
+                    "Nữ" => false,
+                    "Khác" => null,
+                    _ => null
+                };
+
+                if (genderBool.HasValue)
+                    trainers = trainers.Where(t => t.Gender == genderBool);
+                else
+                    trainers = trainers.Where(t => t.Gender == null);
+            }
+
+
+            var result = await trainers.ToListAsync();
+            return View(result);
         }
 
         public async Task<IActionResult> Details(int? id)
