@@ -253,7 +253,7 @@
             setIcon(isDark);
         });
     </script>
-
     @await RenderSectionAsync("Scripts", required: false)
+    @await Html.PartialAsync("_Toast")
 </body>
 </html>
