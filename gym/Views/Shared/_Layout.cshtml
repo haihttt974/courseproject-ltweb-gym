@@ -283,6 +283,23 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Booking" asp-action="Unpaid">Gói chưa thanh toán</a>
                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="feedbackDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Phản hồi
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="feedbackDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Feedback" asp-action="Create">
+                                            Gửi phản hồi mới
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Feedback" asp-action="MyFeedbacks">
+                                            Phản hồi của tôi
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         }
                         @* <li class="nav-item dropdown">
                             <a class="nav-link d-flex align-items-center gap-1" href="#" id="usersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
