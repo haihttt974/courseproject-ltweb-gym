@@ -1,4 +1,4 @@
-﻿using gym.Services;
+﻿using gym.Services.Chatbot;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gym.Controllers

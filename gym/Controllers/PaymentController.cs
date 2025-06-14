@@ -11,11 +11,12 @@ namespace gym.Controllers
     {
         private readonly GymContext _context;
         private readonly VnPaySettings _vnPaySettings;
-
-        public PaymentController(GymContext context, IOptions<VnPaySettings> vnPayOptions)
+        private readonly EmailService _emailService;
+        public PaymentController(GymContext context, IOptions<VnPaySettings> vnPayOptions, EmailService emailService)
         {
             _context = context;
             _vnPaySettings = vnPayOptions.Value;
+            _emailService = emailService;
         }
 
         [HttpPost]
@@ -122,6 +123,38 @@ namespace gym.Controllers
 
                 TempData["PaymentMethod"] = "VNPAY";
                 TempData["Message"] = "Thanh toán thành công!";
+                // Gửi email thanh toán thành công
+                // Truy từ Payment → MemberPayment
+                var _memberPayment = await _context.MemberPayments
+                    .Include(mp => mp.Member)
+                    .FirstOrDefaultAsync(mp => mp.PaymentId == payment.PaymentId);
+
+                if (_memberPayment != null)
+                {
+                    var memberId = _memberPayment.MemberId;
+
+                    // Truy tiếp từ Member → User
+                    var user = await _context.Users
+                        .FirstOrDefaultAsync(u => u.RoleId == 2 && u.ReferenceId == memberId);
+
+                    if (user != null && !string.IsNullOrEmpty(user.Email))
+                    {
+                        var member = await _context.Members.FindAsync(memberId);
+
+                        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "PaymentSuccessTemplate.html");
+                        string emailBody = await System.IO.File.ReadAllTextAsync(templatePath);
+
+                        emailBody = emailBody
+                            .Replace("{{UserName}}", member.FullName)
+                            .Replace("{{PaymentId}}", payment.PaymentId.ToString())
+                            .Replace("{{Amount}}", payment.Total.ToString("N0"))
+                            .Replace("{{Date}}", DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+
+                        await _emailService.SendEmailAsync(user.Email, "Thanh toán thành công qua VNPay", emailBody);
+                    }
+                }
+
+
                 return View("PaymentSuccess", payment);
             }
 
