@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace gym.Data;
 
 public partial class User
 {
     public int UserId { get; set; }
-
+    [Required(ErrorMessage = "Vai trò là bắt buộc.")]
     public int RoleId { get; set; }
 
     public string? UserName { get; set; }
 
     public string? Password { get; set; }
-
+    [EmailAddress(ErrorMessage = "Email không đúng định dạng.")]
     public string? Email { get; set; }
 
     public int? ReferenceId { get; set; }
