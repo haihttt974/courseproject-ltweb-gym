@@ -1,11 +1,11 @@
 ﻿using gym.Data;
-using gym.Models;
+using gym.Models.Chatbot;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Text.Json;
 
-namespace gym.Services
+namespace gym.Services.Chatbot
 {
     public class ChatBotService : IChatBotService
     {

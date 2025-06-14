@@ -1,4 +1,4 @@
-﻿namespace gym.Services
+﻿namespace gym.Services.Chatbot
 {
     public interface IChatBotService
     {

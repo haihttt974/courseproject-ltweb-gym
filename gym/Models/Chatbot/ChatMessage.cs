@@ -1,4 +1,4 @@
-﻿namespace gym.Models
+﻿namespace gym.Models.Chatbot
 {
     public class ChatMessage
     {

@@ -213,6 +213,7 @@ namespace gym.Controllers
             {
                 Total = package.Price ?? 0,
                 IsPaid = false,
+                Description = package.Name,
                 DueDate = DateTime.Now.AddDays(10)
             };
             _context.Payments.Add(payment);

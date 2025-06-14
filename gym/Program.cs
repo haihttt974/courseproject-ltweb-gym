@@ -2,7 +2,9 @@
 using DinkToPdf.Contracts; //Install - Package DinkToPdf.Contracts
 using gym.Data;
 using gym.Models;
-using gym.Services;
+using gym.Models.Chatbot;
+using gym.Services.Chatbot;
+using gym.Services.PayPal;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +18,15 @@ namespace gym
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            
+            //chat bot open router
             builder.Services.Configure<OpenAIConfig>(
                 builder.Configuration.GetSection("OpenAI"));
             builder.Services.AddHttpClient<IChatBotService, ChatBotService>();
+            // VNPay
             builder.Services.Configure<VnPaySettings>(builder.Configuration.GetSection("VnPay"));
+            // PayPal
+            builder.Services.AddScoped<PayPalService>();
+            // Mail
             builder.Services.AddScoped<EmailService>();
 
             builder.Services.AddSession();
