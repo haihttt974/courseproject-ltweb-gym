@@ -61,9 +61,9 @@
             {
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h4 class="card-title text-primary">@package.Name</h4>
-                            <p>@package.Description</p>
+                        <div class="card-body text-center">
+                            <h5 class="text-primary fw-bold mb-2">@package.Name</h5>
+                            <p class="text-muted mb-3">@package.Description</p>
                             <p class="fw-bold">@string.Format("{0:N0}", package.Price) VNĐ</p>
                         </div>
                     </div>
@@ -88,13 +88,12 @@
                          class="card-img-top"
                          style="height: 250px; object-fit: cover; border-top-left-radius: 6px; border-top-right-radius: 6px;"
                          alt="@trainer.FullName" />
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">@trainer.FullName</h5>
-                        <p>@trainer.Specialty</p>
+                    <div class="card-body text-center">
+                        <h5 class="text-primary fw-bold mb-2">@trainer.FullName</h5>
+                        <p class="text-muted">@trainer.Specialty</p>
                     </div>
                 </div>
             </div>
         }
     </div>
 </section>
-
