@@ -177,47 +177,38 @@
         }
 
         @@keyframes spin {
-            0%
+            0% {
+                transform: rotate(0deg);
+            }
 
-        {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @@keyframes fadeIn {
-            from
+            from {
+                opacity: 0;
+            }
 
-        {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-
+            to {
+                opacity: 1;
+            }
         }
 
         @@media (max-width: 768px) {
-            .navbar-nav
+            .navbar-nav {
+                padding: 1rem;
+            }
 
-        {
-            padding: 1rem;
-        }
+            .nav-link {
+                padding: 0.5rem 0;
+            }
 
-        .nav-link {
-            padding: 0.5rem 0;
-        }
-
-        .footer .container {
-            flex-direction: column;
-            text-align: center;
-        }
-
+            .footer .container {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -357,6 +348,18 @@
                     <ul class="navbar-nav ms-auto">
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <!-- Nút chuông hiển thị thông báo -->
+                            @* <li class="nav-item me-2 d-flex align-items-center">
+                                <button type="button" id="notificationToggle" class="btn btn-outline-light position-relative">
+                                    <i class="bi bi-bell-fill"></i>
+                                    <span id="notificationCount"
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                          style="display: none;">0</span>
+                                </button>
+                            </li> *@
+                            <li class="nav-item me-2">
+                                @await Component.InvokeAsync("NotificationCount")
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Xin chào, @User.Identity.Name
@@ -428,8 +431,31 @@
     <div id="chatPopup" style="display: none; position: fixed; bottom: 90px; right: 20px; width: 500px; height: 580px; background: white; border-radius: 16px; box-shadow: 0 0 20px rgba(0,0,0,0.15); z-index: 9999; overflow: hidden;">
         <iframe src="/Chat" style="width: 100%; height: 100%; border: none; border-radius: 16px;"></iframe>
     </div>
-
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("notificationToggle")?.addEventListener("click", function () {
+                window.location.href = "/Notification/List";
+            });
+        });
+    </script>
+    <script>
+        //     $(document).ready(function () {
+        //     Load số lượng thông báo chưa đọc
+        //     $.get('/Notification/UnseenCount', function (data) {
+        //         const count = parseInt(data);
+        //         if (count > 0) {
+        //             $('#notificationCount').text(count).show();
+        //         } else {
+        //             $('#notificationCount').hide();
+        //         }
+        //     });
+
+        //     Khi click chuông thì chuyển trang
+        //     $('#notificationToggle').click(function () {
+        //         window.location.href = '/Notification/List';
+        //     });
+        // });
+
         function toggleChatPopup() {
             const popup = document.getElementById("chatPopup");
             popup.style.display = popup.style.display === "none" ? "block" : "none";

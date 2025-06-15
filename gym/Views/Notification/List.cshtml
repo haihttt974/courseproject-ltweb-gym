@@ -1,0 +1,67 @@
+﻿@model List<gym.Data.UserNotification>
+
+@{
+    ViewData["Title"] = "Thông báo";
+}
+
+<h2 class="text-primary mb-4">Thông báo của bạn</h2>
+
+<div class="list-group">
+    @foreach (var item in Model)
+    {
+        var isUnread = item.Seen == false;
+        <div class="notification-item p-3 mb-3 border rounded position-relative @(isUnread ? "bg-light border-primary" : "bg-white")"
+             data-id="@item.NotificationId"
+             style="cursor: pointer;">
+
+            <div class="d-flex justify-content-between">
+                <div class="fw-bold @(isUnread ? "text-dark" : "text-muted")">
+                    @item.Notification.Title
+                </div>
+                <div class="text-muted small text-end">
+                    @item.Notification.CreatedAt?.ToString("HH:mm dd/MM/yyyy")
+                </div>
+            </div>
+
+            <div class="text-secondary mt-1">
+                @item.Notification.Content
+            </div>
+
+            @if (isUnread)
+            {
+                <span class="position-absolute top-0 start-0 translate-middle p-1 bg-success border border-white rounded-circle"></span>
+            }
+        </div>
+    }
+</div>
+
+<!-- Bỏ class fade để tránh animation gây giật -->
+<div class="modal" id="notificationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" id="notificationModalContent">
+            <!-- Nội dung sẽ được render qua AJAX -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".notification-item").click(function () {
+                var id = $(this).data("id");
+
+                $.post(`/Notification/MarkAsSeen`, { id: id }, function (html) {
+                    // Gán nội dung vào modal sau khi nhận được HTML
+                    $("#notificationModalContent").html(html);
+
+                    // Chờ 1 tick để DOM cập nhật xong rồi mới gọi Bootstrap Modal
+                    setTimeout(function () {
+                        const modalEl = document.getElementById("notificationModal");
+                        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                        modal.show();
+                    }, 50);
+                });
+            });
+        });
+    </script>
+}

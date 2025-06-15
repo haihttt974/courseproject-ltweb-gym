@@ -1,0 +1,33 @@
+﻿@model int
+
+<!-- Nút chuông thông báo đẹp và chuyên nghiệp -->
+<a href="/Notification/List" class="position-relative me-3 text-decoration-none">
+    <button type="button" class="notification-btn btn btn-outline-light rounded-circle">
+        <i class="bi bi-bell-fill fs-4"></i>
+        @if (Model > 0)
+        {
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                @Model
+            </span>
+        }
+    </button>
+</a>
+
+<style>
+    .notification-btn {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #6b7280, #4b5563);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .notification-btn:hover {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            transform: translateY(-2px);
+        }
+</style>

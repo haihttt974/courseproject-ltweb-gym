@@ -113,7 +113,7 @@ namespace gym.Controllers
             // Gửi thông báo thành công
             TempData["Success"] = "Thông báo đã được gửi đến người dùng thành công.";
 
-            return RedirectToAction("Index");
+            return RedirectToAction("NotificationsSent");
         }
         public async Task<IActionResult> NotificationsSent()
         {
