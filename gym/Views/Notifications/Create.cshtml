@@ -20,13 +20,21 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="SendRole" class="form-label fw-bold">Gửi đến vai trò</label>
-        <select asp-for="SendRole" class="form-select" id="sendRole">
-            <option value="">-- Tất cả --</option>
-            <option value="2">👤 Member</option>
-            <option value="3">🧑‍💼 Staff</option>
-            <option value="4">🏋️ Trainer</option>
-        </select>
+        <label class="form-label fw-bold">Chọn vai trò gửi thông báo:</label>
+        <div class="form-check">
+            <input class="form-check-input sendRoleCheck" type="checkbox" value="2" id="roleMember" />
+            <label class="form-check-label" for="roleMember">👤 Member</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input sendRoleCheck" type="checkbox" value="3" id="roleStaff" />
+            <label class="form-check-label" for="roleStaff">🧑‍💼 Staff</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input sendRoleCheck" type="checkbox" value="4" id="roleTrainer" />
+            <label class="form-check-label" for="roleTrainer">🏋️ Trainer</label>
+        </div>
+
+        <input type="hidden" asp-for="SendRole" id="sendRole" />
     </div>
 
     <div class="mb-3">
@@ -121,3 +129,26 @@
         </ul>
     </div>
 }
+<script>
+    document.querySelectorAll(".sendRoleCheck").forEach(cb => {
+        cb.addEventListener("change", function () {
+            const checked = Array.from(document.querySelectorAll(".sendRoleCheck:checked"))
+                .map(x => x.value);
+
+            const sendRoleInput = document.getElementById("sendRole");
+            if (checked.length === 1) {
+                sendRoleInput.value = checked[0];
+            } else {
+                sendRoleInput.value = "";
+            }
+
+            // Cập nhật checkbox người dùng trong bảng
+            const rows = document.querySelectorAll("#userTable tbody tr");
+            rows.forEach(row => {
+                const roleId = row.getAttribute("data-role");
+                const checkbox = row.querySelector("input[type='checkbox']");
+                checkbox.checked = checked.includes(roleId);
+            });
+        });
+    });
+</script>

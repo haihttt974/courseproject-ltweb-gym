@@ -19,7 +19,9 @@ public class NotificationCountViewComponent : ViewComponent
         var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
         if (user == null) return View(0);
 
-        var count = await _context.UserNotifications.CountAsync(n => n.UserId == user.UserId && n.Seen == false);
+        var count = await _context.UserNotifications
+            .CountAsync(n => n.UserId == user.UserId && n.Seen == false);
+
         return View(count);
     }
 }
