@@ -1,721 +1,100 @@
-﻿@* @{
+﻿@model gym.ViewModels.HomeViewModel
+@{
     ViewData["Title"] = "Trang Chủ";
 }
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"]</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Bootstrap Icons (cho nút chế độ tối và Back to Top) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <style>
-        /* Định dạng chung cho body */
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #e0f7fa, #80deea); /* Nền xanh biển nhạt */
-            color: #333;
-            transition: background-color 0.3s, color 0.3s;
-        }
 
-            /* Chế độ tối */
-            body.dark-mode {
-                background: linear-gradient(135deg, #1c2526, #2a3439);
-                color: #d4d4d4;
-            }
-
-                body.dark-mode .bg-light {
-                    background-color: #2a3439 !important;
-                }
-
-                body.dark-mode .text-charcoal {
-                    color: #d4d4d4;
-                }
-
-                body.dark-mode .card {
-                    background-color: #2a3439;
-                    color: #d4d4d4;
-                }
-
-                body.dark-mode .carousel-overlay {
-                    background: rgba(26, 43, 75, 0.7);
-                }
-
-                body.dark-mode .feature-card,
-                body.dark-mode .feedback-card,
-                body.dark-mode .notification-card,
-                body.dark-mode .trainer-card,
-                body.dark-mode .package-card {
-                    background: linear-gradient(135deg, #2a3439, #3a4449);
-                    color: #d4d4d4;
-                }
-
-        /* Thanh điều hướng (nếu thêm sau) */
-        .bg-navy {
-            background-color: #1a2b4b;
-        }
-
-        /* Màu chữ */
-        .text-charcoal {
-            color: #333333;
-        }
-
-        /* Định dạng carousel */
-        .carousel {
-            max-width: 100%;
-            margin: 0 auto;
-        }
-
-        .carousel-item {
-            min-height: 300px;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            padding: 1rem;
-            transition: opacity 0.6s ease-in-out; /* Chuyển đổi mượt */
-        }
-
-            .carousel-item.active {
-                opacity: 1;
-                display: block;
-            }
-
-            .carousel-item:not(.active) {
-                opacity: 0;
-                display: none; /* Ẩn hoàn toàn slide không hoạt động */
-            }
-
-        /* Lớp phủ carousel */
-        .carousel-overlay {
-            background: rgba(26, 43, 75, 0.7);
-            padding: 1rem;
-            border-radius: 5px;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        /* Chỉ số carousel */
-        .carousel-indicators button {
-            background-color: #fff;
-            opacity: 0.5;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            border: none;
-        }
-
-        .carousel-indicators .active {
-            opacity: 1;
-            background-color: #d4a017; /* Màu vàng cho chỉ số đang hoạt động */
-        }
-
-        /* Nút điều hướng carousel */
-        .carousel-control-prev,
-        .carousel-control-next {
-            background: rgba(26, 43, 75, 0.5);
-            width: 5%;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-
-            .carousel-control-prev:hover,
-            .carousel-control-next:hover {
-                opacity: 1;
-            }
-
-        /* Nút tùy chỉnh */
-        .btn-navy {
-            background-color: #1a2b4b;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 3px;
-            font-weight: 700;
-            transition: background-color 0.2s;
-        }
-
-            .btn-navy:hover {
-                background-color: #d4a017;
-            }
-
-        .btn-custom {
-            background-color: #0288d1; /* Xanh biển cho nút */
-            border: none;
-            padding: 1rem 3rem;
-            font-size: 1.5rem;
-            color: #fff;
-        }
-
-            .btn-custom:hover {
-                background-color: #0277bd;
-            }
-
-        .bg-gold {
-            background-color: #d4a017;
-        }
-
-        /* Phần Hero */
-        .hero-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: bold;
-            color: #0288d1;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-subtitle {
-            font-size: 1.5rem;
-            color: #555;
-            margin-bottom: 2rem;
-        }
-
-        /* Thẻ (cards) */
-        .feature-card, .feedback-card, .notification-card, .trainer-card, .package-card {
-            background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            height: auto;
-            text-align: center;
-        }
-
-        .feature-icon, .feedback-icon, .notification-icon, .trainer-icon, .package-icon {
-            font-size: 2.5rem;
-            color: #0288d1;
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            color: #0288d1;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .trainer-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-        }
-
-        .package-card h4 {
-            color: #0288d1;
-        }
-
-        /* Hiệu ứng động */
-        @@keyframes fadeIn {
-            from
-
+<!-- Carousel ảnh đầu trang -->
+<div id="mainCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        @for (int i = 1; i <= 4; i++)
         {
-            opacity: 0;
-            transform: translateY(10px);
+            <div class="carousel-item @(i == 1 ? "active" : "")">
+                <img src="~/images/Content/slide@(i).jpg"
+                     class="d-block w-100"
+                     style="height: 400px; object-fit: cover; object-position: center; border-radius: 6px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);"
+                     alt="Slide @(i)" />
+            </div>
         }
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+</div>
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+<!-- Tính năng nổi bật -->
+<section class="container py-5">
+    <h2 class="text-center mb-4 section-title">Tính Năng Nổi Bật</h2>
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="p-4 border rounded shadow h-100">
+                <div class="feature-icon">💪</div>
+                <h5 class="mt-3">Lịch Tập Linh Hoạt</h5>
+                <p>Tùy chỉnh lịch tập theo thời gian và nhu cầu cá nhân.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="p-4 border rounded shadow h-100">
+                <div class="feature-icon">📊</div>
+                <h5 class="mt-3">Quản Lý Tiến Độ</h5>
+                <p>Theo dõi và đánh giá hiệu quả tập luyện dễ dàng.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="p-4 border rounded shadow h-100">
+                <div class="feature-icon">🏋️</div>
+                <h5 class="mt-3">Hỗ Trợ Liên Tục</h5>
+                <p>Hệ thống hỗ trợ bạn mọi lúc trong hành trình tập luyện.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-        }
+<!-- Gói tập mới nhất -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-4 section-title">Gói Tập Mới Nhất</h2>
+        <div class="row">
+            @foreach (var package in Model.LatestPackages)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h4 class="card-title text-primary">@package.Name</h4>
+                            <p>@package.Description</p>
+                            <p class="fw-bold">@string.Format("{0:N0}", package.Price) VNĐ</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="text-center mt-3">
+            <a class="btn btn-primary" href="/Packages/Index">Xem tất cả gói tập</a>
+        </div>
+    </div>
+</section>
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        /* Nút Back to Top */
-        #backToTop {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: none;
-            z-index: 1000;
-            padding: 10px 15px;
-            border-radius: 3px;
-            background-color: #0288d1;
-            color: white;
-        }
-
-        /* Điều chỉnh responsive */
-        @@media (max-width: 768px) {
-            .carousel-item
-
+<!-- Huấn luyện viên -->
+<section class="container py-5">
+    <h2 class="text-center mb-4 section-title">Đội Ngũ Huấn Luyện Viên</h2>
+    <div class="row">
+        @foreach (var trainer in Model.Trainers)
         {
-            min-height: 600px; /* Đủ chỗ cho ba thẻ xếp dọc */
-        }
-
-        .carousel-overlay {
-            padding: 0.5rem;
-        }
-
-        .trainer-img {
-            height: 150px;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-        }
-
-        .btn-custom {
-            padding: 0.8rem 2rem;
-            font-size: 1.2rem;
-        }
-
-        .feature-card, .feedback-card, .notification-card, .trainer-card, .package-card {
-            max-width: 100%;
-        }
-
-        }
-    </style>
-</head>
-<body>
-    <!-- Phần Hero (giữ nguyên) -->
-    <section class="hero-section">
-        <div class="container">
-            <h1 class="hero-title">Chào Mừng Đến Với Hệ Thống Quản Lý Hội Viên Gym</h1>
-            <p class="hero-subtitle">Tham gia ngay để trải nghiệm hành trình tập luyện chuyên nghiệp!</p>
-            <a href="/Account/Register" class="btn btn-custom btn-lg text-white">Đăng Ký Ngay</a>
-        </div>
-    </section>
-
-    <!-- Phần Tính năng (giữ nguyên) -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="section-title">Tính Năng Nổi Bật</h2>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">💪</div>
-                        <h3>Lịch Tập Linh Hoạt</h3>
-                        <p>Tùy chỉnh lịch tập theo thời gian và nhu cầu cá nhân.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>Quản Lý Tiến Độ</h3>
-                        <p>Theo dõi và đánh giá hiệu quả tập luyện dễ dàng.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">🏋️</div>
-                        <h3>Hỗ Trợ Liên Tục</h3>
-                        <p>Hệ thống hỗ trợ bạn mọi lúc trong hành trình tập luyện.</p>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@Url.Content("" + trainer.Image)"
+                         class="card-img-top"
+                         style="height: 250px; object-fit: cover; border-top-left-radius: 6px; border-top-right-radius: 6px;"
+                         alt="@trainer.FullName" />
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">@trainer.FullName</h5>
+                        <p>@trainer.Specialty</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Phần Phản hồi (Carousel với 2 slide, mỗi slide 3 thẻ) -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="section-title">Phản Hồi Từ Hội Viên</h2>
-            <div id="feedbackCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#feedbackCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#feedbackCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="carousel-overlay">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="feedback-card">
-                                        <div class="feedback-icon">⭐</div>
-                                        <h3>Nguyễn Văn A</h3>
-                                        <p>"Hệ thống rất dễ sử dụng, giúp tôi theo dõi tiến độ tập luyện hiệu quả!"</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="feedback-card">
-                                        <div class="feedback-icon">⭐</div>
-                                        <h3>Trần Thị B</h3>
-                                        <p>"Lịch tập linh hoạt, phù hợp với lịch trình bận rộn của tôi."</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="feedback-card">
-                                        <div class="feedback-icon">⭐</div>
-                                        <h3>Lê Văn C</h3>
-                                        <p>"Hỗ trợ từ hệ thống rất nhanh chóng và chuyên nghiệp!"</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="carousel-overlay">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="feedback-card">
-                                        <div class="feedback-icon">⭐</div>
-                                        <h3>Phạm Thị D</h3>
-                                        <p>"Phòng gym sạch sẽ, thiết bị hiện đại, rất đáng để tham gia!"</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="feedback-card">
-                                        <div class="feedback-icon">⭐</div>
-                                        <h3>Hoàng Văn E</h3>
-                                        <p>"HLV rất nhiệt tình, giúp tôi cải thiện sức khỏe nhanh chóng."</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="feedback-card">
-                                        <div class="feedback-icon">⭐</div>
-                                        <h3>Ngô Thị F</h3>
-                                        <p>"Ứng dụng quản lý tiện lợi, dễ dàng đặt lịch tập."</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Trước</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Tiếp</span>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Phần Thông báo (giữ nguyên) -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="section-title">Thông Báo Cá Nhân</h2>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="notification-card">
-                            <div class="notification-icon">🔔</div>
-                            <h3>Nhắc Nhở Lịch Tập</h3>
-                            <p>Bạn có buổi tập vào 18:00 hôm nay tại phòng gym chính.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="notification-card">
-                            <div class="notification-icon">🔔</div>
-                            <h3>Gói Tập Sắp Hết Hạn</h3>
-                            <p>Gói tập 6 tháng của bạn sẽ hết hạn trong 5 ngày tới.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="notification-card">
-                            <div class="notification-icon">🔔</div>
-                            <h3>Tin Nhắn Từ HLV</h3>
-                            <p>HLV của bạn đã gửi kế hoạch tập luyện mới.</p>
-                        </div>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="text-center">
-                    <p class="hero-subtitle">Vui lòng đăng nhập để xem thông báo cá nhân.</p>
-                    <a href="/Account/Login" class="btn btn-custom btn-lg text-white">Đăng Nhập</a>
-                </div>
-            }
-        </div>
-    </section>
-
-    <!-- Phần Huấn luyện viên (Carousel với 2 slide, mỗi slide 3 thẻ) -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="section-title">Giới Thiệu Huấn Luyện Viên</h2>
-            <div id="trainerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#trainerCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#trainerCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="carousel-overlay">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="trainer-card">
-                                        <img src="https://via.placeholder.com/300x200" alt="Huấn luyện viên 1" class="trainer-img">
-                                        <h3>Nguyễn Hoàng</h3>
-                                        <p>Chuyên gia về sức mạnh và thể hình với 5 năm kinh nghiệm.</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="trainer-card">
-                                        <img src="https://via.placeholder.com/300x200" alt="Huấn luyện viên 2" class="trainer-img">
-                                        <h3>Phạm Linh</h3>
-                                        <p>Chuyên về yoga và tăng cường sự dẻo dai, 7 năm kinh nghiệm.</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="trainer-card">
-                                        <img src="https://via.placeholder.com/300x200" alt="Huấn luyện viên 3" class="trainer-img">
-                                        <h3>Trần Nam</h3>
-                                        <p>Chuyên về cardio và giảm cân, 4 năm kinh nghiệm.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="carousel-overlay">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="trainer-card">
-                                        <img src="https://via.placeholder.com/300x200" alt="Huấn luyện viên 4" class="trainer-img">
-                                        <h3>Nguyễn Văn Lộc</h3>
-                                        <p>Chuyên gia về thể hình chức năng, 6 năm kinh nghiệm.</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="trainer-card">
-                                        <img src="https://via.placeholder.com/300x200" alt="Huấn luyện viên 5" class="trainer-img">
-                                        <h3>Trần Thị Linh</h3>
-                                        <p>Chuyên về pilates và phục hồi, 5 năm kinh nghiệm.</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="trainer-card">
-                                        <img src="https://via.placeholder.com/300x200" alt="Huấn luyện viên 6" class="trainer-img">
-                                        <h3>Lê Minh Tuấn</h3>
-                                        <p>Chuyên về boxing và tăng sức bền, 4 năm kinh nghiệm.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#trainerCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Trước</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#trainerCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Tiếp</span>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Phần Gói tập luyện (Carousel với 2 slide, mỗi slide 3 thẻ) -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="section-title">Các Gói Tập Luyện</h2>
-            <div id="packageCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#packageCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#packageCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="carousel-overlay">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="package-card">
-                                        <div class="package-icon">🏋️</div>
-                                        <h3>Gói Cơ Bản</h3>
-                                        <h4>500.000 VNĐ/tháng</h4>
-                                        <p>Truy cập phòng gym, lịch tập tự do, hỗ trợ cơ bản.</p>
-                                        <a href="/Account/Register" class="btn btn-custom text-white">Chọn Gói</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="package-card">
-                                        <div class="package-icon">🏋️</div>
-                                        <h3>Gói Nâng Cao</h3>
-                                        <h4>1.000.000 VNĐ/tháng</h4>
-                                        <p>HLV cá nhân, lịch tập tùy chỉnh, hỗ trợ dinh dưỡng.</p>
-                                        <a href="/Account/Register" class="btn btn-custom text-white">Chọn Gói</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="package-card">
-                                        <div class="package-icon">🏋️</div>
-                                        <h3>Gói Cao Cấp</h3>
-                                        <h4>2.000.000 VNĐ/tháng</h4>
-                                        <p>HLV 1-1, kế hoạch tập luyện chi tiết, ưu tiên đặt lịch.</p>
-                                        <a href="/Account/Register" class="btn btn-custom text-white">Chọn Gói</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="carousel-overlay">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="package-card">
-                                        <div class="package-icon">🏋️</div>
-                                        <h3>Gói Yoga</h3>
-                                        <h4>700.000 VNĐ/tháng</h4>
-                                        <p>Lớp yoga chuyên sâu, lịch tập linh hoạt, hỗ trợ thư giãn.</p>
-                                        <a href="/Account/Register" class="btn btn-custom text-white">Chọn Gói</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="package-card">
-                                        <div class="package-icon">🏋️</div>
-                                        <h3>Gói Cardio</h3>
-                                        <h4>800.000 VNĐ/tháng</h4>
-                                        <p>Buổi tập cardio cường độ cao, hỗ trợ giảm cân.</p>
-                                        <a href="/Account/Register" class="btn btn-custom text-white">Chọn Gói</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="package-card">
-                                        <div class="package-icon">🏋️</div>
-                                        <h3>Gói Gia Đình</h3>
-                                        <h4>2.500.000 VNĐ/tháng</h4>
-                                        <p>Gói tập cho 3 người, ưu đãi đặc biệt, hỗ trợ toàn diện.</p>
-                                        <a href="/Account/Register" class="btn btn-custom text-white">Chọn Gói</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#packageCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Trước</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#packageCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Tiếp</span>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Phần Call to Action (giữ nguyên) -->
-    <section class="py-5 bg-light">
-        <div class="container text-center">
-            <h2 class="mb-4">Sẵn Sàng Bắt Đầu Hành Trình?</h2>
-            <p class="mb-4">Đăng ký ngay để chinh phục mục tiêu sức khỏe của bạn!</p>
-            <a href="/Account/Register" class="btn btn-custom btn-lg text-white">Tham Gia Ngay</a>
-        </div>
-    </section>
-
-    <!-- Nút Back to Top -->
-    <button id="backToTop" class="btn btn-navy"><i class="bi bi-arrow-up"></i></button>
-
-    <!-- Bootstrap 5 JS và Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <!-- GSAP ScrollTrigger -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script>
-        // Đăng ký ScrollTrigger với GSAP
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Hiệu ứng cho phần Hero
-        gsap.from(".hero-title", { opacity: 0, y: 50, duration: 1, delay: 0.5 });
-        gsap.from(".hero-subtitle", { opacity: 0, y: 50, duration: 1, delay: 0.7 });
-        gsap.from(".btn-custom", { opacity: 0, scale: 0.5, duration: 0.8, delay: 1.5 });
-
-        // Hiệu ứng cho thẻ Tính năng
-        gsap.from(".feature-card", {
-            opacity: 0,
-            x: -100,
-            duration: 1,
-            stagger: 0.4,
-            scrollTrigger: {
-                trigger: ".feature-card",
-                start: "top 80%",
-            }
-        });
-
-        // Hiệu ứng cho carousel Phản hồi
-        gsap.from("#feedbackCarousel .carousel-item", {
-            opacity: 0,
-            x: 100,
-            duration: 1,
-            scrollTrigger: {
-                trigger: "#feedbackCarousel",
-                start: "top 80%",
-            }
-        });
-
-        // Hiệu ứng cho thẻ Thông báo
-        gsap.from(".notification-card", {
-            opacity: 0,
-            x: -100,
-            duration: 1,
-            stagger: 0.4,
-            scrollTrigger: {
-                trigger: ".notification-card",
-                start: "top 80%",
-            }
-        });
-
-        // Hiệu ứng cho carousel Huấn luyện viên
-        gsap.from("#trainerCarousel .carousel-item", {
-            opacity: 0,
-            x: 100,
-            duration: 1,
-            scrollTrigger: {
-                trigger: "#trainerCarousel",
-                start: "top 80%",
-            }
-        });
-
-        // Hiệu ứng cho carousel Gói tập
-        gsap.from("#packageCarousel .carousel-item", {
-            opacity: 0,
-            x: -100,
-            duration: 1,
-            scrollTrigger: {
-                trigger: "#packageCarousel",
-                start: "top 80%",
-            }
-        });
-
-        // Chế độ tối
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            if (darkModeToggle) {
-                darkModeToggle.innerHTML = '<i class="bi bi-sun"></i>';
-            }
         }
-        if (darkModeToggle) {
-            darkModeToggle.addEventListener('click', function () {
-                document.body.classList.toggle('dark-mode');
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                darkModeToggle.innerHTML = isDarkMode ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
-                localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-            });
-        }
+    </div>
+</section>
 
-        // Nút Back to Top
-        const backToTop = document.getElementById('backToTop');
-        window.addEventListener('scroll', function () {
-            backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
-        });
-        backToTop.addEventListener('click', function () {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    </script>
-</body>
-</html> *@
