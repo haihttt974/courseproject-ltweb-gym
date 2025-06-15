@@ -210,27 +210,50 @@
                 text-align: center;
             }
         }
+
+        .modal.fade .modal-dialog {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            pointer-events: none; /* Tránh hover ảnh hưởng */
+        }
+
+        .modal.show .modal-dialog {
+            pointer-events: auto;
+        }
+        /* Tắt animation nếu cần */
+        .modal.fade .modal-dialog {
+            transition: none !important;
+        }
+
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Smooth scroll for anchor links
-            $('a[href*="#"]').on('click', function(e) {
-                e.preventDefault();
-                $('html, body').animate({
-                    scrollTop: $($(this).attr('href')).offset().top
-                }, 500, 'linear');
-            });
+    @section Scripts {
+        <script>
+            $(function () {
+                let modalInstance;
 
-            // Show loading overlay on form submit
-            $('form').on('submit', function() {
-                $('.loading-overlay').fadeIn();
+                $(document).on("click", ".notification-item", function () {
+                    const id = $(this).data("id");
+
+                    // Chỉ gọi 1 lần, tránh nhiều click giật lag
+                    $.post("/Notification/MarkAsSeen", { id }, function (html) {
+                        $("#notificationModalContent").html(html);
+
+                        // Không tạo mới nếu đã có modal instance
+                        const modalEl = document.getElementById("notificationModal");
+                        modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+                        // Show nhẹ nhàng sau khi DOM sẵn sàng
+                        setTimeout(() => {
+                            modalInstance.show();
+                        }, 10);
+                    });
+                });
             });
-        });
-    </script>
+        </script>
+    }
 </head>
 <body>
     <header>
@@ -348,15 +371,6 @@
                     <ul class="navbar-nav ms-auto">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <!-- Nút chuông hiển thị thông báo -->
-                            @* <li class="nav-item me-2 d-flex align-items-center">
-                                <button type="button" id="notificationToggle" class="btn btn-outline-light position-relative">
-                                    <i class="bi bi-bell-fill"></i>
-                                    <span id="notificationCount"
-                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                          style="display: none;">0</span>
-                                </button>
-                            </li> *@
                             <li class="nav-item me-2">
                                 @await Component.InvokeAsync("NotificationCount")
                             </li>
