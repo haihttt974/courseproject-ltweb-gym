@@ -1,12 +1,10 @@
 ﻿using gym.Data;
-using gym.Models; // giả sử model nằm ở đây
-using gym.ViewModels;
+using gym.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,7 +50,6 @@ namespace gym.Controllers
                     trainers = trainers.Where(t => t.Gender == null);
             }
 
-
             var result = await trainers.ToListAsync();
             return View(result);
         }
@@ -74,10 +71,26 @@ namespace gym.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TrainerId,FullName,Phone,Specialty,ScheduleNote")] Trainer trainer)
+        public async Task<IActionResult> Create(Trainer trainer, IFormFile ImageFile)
         {
             if (ModelState.IsValid)
             {
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    var fileName = Path.GetFileName(ImageFile.FileName);
+                    var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/trainer");
+                    if (!Directory.Exists(folderPath))
+                        Directory.CreateDirectory(folderPath);
+
+                    var filePath = Path.Combine(folderPath, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ImageFile.CopyToAsync(stream);
+                    }
+
+                    trainer.Image = "/images/trainer/" + fileName;
+                }
+
                 _context.Add(trainer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -97,12 +110,36 @@ namespace gym.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TrainerId,FullName,Phone,Specialty,ScheduleNote")] Trainer trainer)
+        [ActionName("Edit")]
+        public async Task<IActionResult> EditPost(int id, Trainer trainer, IFormFile ImageFile)
         {
             if (id != trainer.TrainerId) return NotFound();
 
+            var oldTrainer = await _context.Trainers.AsNoTracking().FirstOrDefaultAsync(t => t.TrainerId == id);
+            if (oldTrainer == null) return NotFound();
+
             if (ModelState.IsValid)
             {
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    var fileName = Path.GetFileName(ImageFile.FileName);
+                    var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/trainer");
+                    if (!Directory.Exists(folderPath))
+                        Directory.CreateDirectory(folderPath);
+
+                    var filePath = Path.Combine(folderPath, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ImageFile.CopyToAsync(stream);
+                    }
+
+                    trainer.Image = "/images/trainer/" + fileName;
+                }
+                else
+                {
+                    trainer.Image = oldTrainer.Image; // giữ ảnh cũ nếu không upload ảnh mới
+                }
+
                 try
                 {
                     _context.Update(trainer);
@@ -110,13 +147,17 @@ namespace gym.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TrainerExists(trainer.TrainerId)) return NotFound();
-                    else throw;
+                    if (!_context.Trainers.Any(t => t.TrainerId == id))
+                        return NotFound();
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(trainer);
         }
+
 
         public async Task<IActionResult> Delete(int? id)
         {
@@ -146,7 +187,6 @@ namespace gym.Controllers
 
         // -------------------- Chức năng Trainer đăng nhập --------------------
 
-        // Danh sách hội viên phụ trách
         [Authorize(Roles = "Trainer")]
         public async Task<IActionResult> MyMembers()
         {
@@ -162,7 +202,6 @@ namespace gym.Controllers
             return View(members);
         }
 
-        // Lịch sử tập luyện của hội viên
         [Authorize(Roles = "Trainer")]
         public async Task<IActionResult> MemberHistory(int id)
         {
@@ -174,44 +213,17 @@ namespace gym.Controllers
             return View(sessions);
         }
 
-        // Xem thông báo gửi đến trainer
-        //public async Task<IActionResult> MyNotifications()
-        //{
-        //    int userId = GetCurrentUserId();
-
-        //    var notifications = await _context.UserNotifications
-        //        .Include(un => un.Notification)
-        //        .Where(un => un.UserId == userId)
-        //        .OrderByDescending(un => un.TimeSend)
-        //        .ToListAsync();
-
-        //    return View(notifications);
-        //}
-
-        // -------------------- Hàm hỗ trợ giả định --------------------
-
         private int GetCurrentTrainerId()
         {
-            // Lấy username hiện tại
             var username = User.Identity?.Name;
-
             if (string.IsNullOrEmpty(username))
                 throw new Exception("User chưa đăng nhập");
 
-            // Tìm user trong DB
-            var user = _context.Users
-                .FirstOrDefault(u => u.UserName == username && u.RoleId == 4);
-
+            var user = _context.Users.FirstOrDefault(u => u.UserName == username && u.RoleId == 4);
             if (user == null)
                 throw new Exception("Không tìm thấy user hoặc user không phải trainer");
 
-            return (int)user.ReferenceId; // đây chính là TrainerId
+            return (int)user.ReferenceId;
         }
-
-        //private int GetCurrentUserId()
-        //{
-        //    // TODO: bạn cần lấy từ session, ở đây tạm giả định UserId = 5
-        //    return 5;
-        //}
     }
 }
