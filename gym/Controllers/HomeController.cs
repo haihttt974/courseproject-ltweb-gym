@@ -1,29 +1,42 @@
-﻿using gym.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using gym.Data;
+using gym.Models;
+using gym.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace gym.Controllers
 {
-    //[Area("Admin")]
-    //[Authorize(Roles = "Admin")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _env;
-        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env)
+        private readonly GymContext _context;
+
+        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env, GymContext context)
         {
             _logger = logger;
             _env = env;
+            _context = context;
         }
+
         public IActionResult CheckEnvironment()
         {
             return Content($"👉 Environment: {_env.EnvironmentName}");
         }
-
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new HomeViewModel
+            {
+                LatestPackages = _context.Packages
+                                         .Where(p => p.IsActive)
+                                         .OrderByDescending(p => p.PackageId)
+                                         .Take(3)
+                                         .ToList(),
+
+                Trainers = _context.Trainers.ToList()
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()
