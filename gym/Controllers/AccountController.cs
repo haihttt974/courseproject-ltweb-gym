@@ -152,7 +152,7 @@ public class AccountController : Controller
 
         await SendOtpEmail(model.Email, otp);
 
-        return RedirectToAction("VerifyOtp", new { email = model.Email });
+        return RedirectToAction("VerifyOtpForgotPassword", new { email = model.Email });
     }
 
     [HttpGet]
@@ -162,7 +162,75 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public IActionResult VerifyOtp(OtpVerificationDto model)
+    public async Task<IActionResult> VerifyOtp(OtpVerificationDto model)
+    {
+        var sessionOtp = HttpContext.Session.GetString("RegisterOtp");
+        var sessionEmail = HttpContext.Session.GetString("RegisterEmail");
+
+        if (model.Email != sessionEmail || model.OtpCode != sessionOtp)
+        {
+            ModelState.AddModelError("", "Mã OTP không đúng hoặc đã hết hạn.");
+            return View(model);
+        }
+
+        try
+        {
+            var member = new Member
+            {
+                FullName = HttpContext.Session.GetString("TempRegister_FullName"),
+                DateOfBirth = DateTime.Parse(HttpContext.Session.GetString("TempRegister_DateOfBirth")),
+                Sex = bool.Parse(HttpContext.Session.GetString("TempRegister_Sex")),
+                Phone = HttpContext.Session.GetString("TempRegister_Phone"),
+                Address = HttpContext.Session.GetString("TempRegister_Address"),
+                CreateDate = DateTime.Now
+            };
+
+            _context.Members.Add(member);
+            await _context.SaveChangesAsync();
+
+            var user = new User
+            {
+                RoleId = 2,
+                UserName = HttpContext.Session.GetString("TempRegister_UserName"),
+                Password = BCrypt.Net.BCrypt.HashPassword(HttpContext.Session.GetString("TempRegister_Password")),
+                Email = sessionEmail,
+                Status = "Hoạt động",
+                IsAtive = true,
+                ReferenceId = member.MemberId
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            // Clear session
+            HttpContext.Session.Remove("RegisterOtp");
+            HttpContext.Session.Remove("RegisterEmail");
+            HttpContext.Session.Remove("TempRegister_FullName");
+            HttpContext.Session.Remove("TempRegister_DateOfBirth");
+            HttpContext.Session.Remove("TempRegister_Sex");
+            HttpContext.Session.Remove("TempRegister_Phone");
+            HttpContext.Session.Remove("TempRegister_Address");
+            HttpContext.Session.Remove("TempRegister_UserName");
+            HttpContext.Session.Remove("TempRegister_Password");
+            HttpContext.Session.Remove("TempRegister_Email");
+
+            TempData["Success"] = "✅ Xác thực OTP thành công. Bạn có thể đăng nhập!";
+            return RedirectToAction("Login");
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", "❌ Có lỗi xảy ra khi lưu thông tin: " + ex.Message);
+            return View(model);
+        }
+    }
+    [HttpGet]
+    public IActionResult VerifyOtpForgotPassword(string email)
+    {
+        return View(new OtpVerificationDto { Email = email });
+    }
+
+    [HttpPost]
+    public IActionResult VerifyOtpForgotPassword(OtpVerificationDto model)
     {
         var storedOtp = HttpContext.Session.GetString("OTP");
         var storedEmail = HttpContext.Session.GetString("OTP_Email");
@@ -187,7 +255,6 @@ public class AccountController : Controller
 
         return RedirectToAction("ResetPassword");
     }
-
     [HttpGet]
     public IActionResult ResetPassword()
     {
