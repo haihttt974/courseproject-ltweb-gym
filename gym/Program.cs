@@ -29,6 +29,8 @@ namespace gym
             // Mail
             builder.Services.AddScoped<EmailService>();
 
+            builder.Services.AddMemoryCache();
+
             builder.Services.AddSession();
 
             builder.Services.AddDbContext<GymContext>(options =>
