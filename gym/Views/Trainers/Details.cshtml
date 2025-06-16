@@ -42,7 +42,7 @@
 </style>
 
     <div class="card detail-card">
-        <img src="@(string.IsNullOrEmpty(Model.Image) ? Url.Content("~/images/trainer/avt-default.jpg") : Url.Content(Model.Image))"
+        <img src="/@(string.IsNullOrEmpty(Model.Image) ? Url.Content("images/trainer/avt-default.jpg") : Url.Content(Model.Image))"
              alt="@Model.FullName"
             class="w-100"
              style="height: 320px; object-fit: cover;" />

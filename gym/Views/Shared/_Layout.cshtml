@@ -268,7 +268,9 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link fw-semibold text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-2"></i>Trang chủ
+                            </a>
                         </li>
                         @if (User.IsInRole("Trainer"))
                         {
@@ -329,44 +331,47 @@
                         }
                         else if (User.IsInRole("Member"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Packages" asp-action="Index">Register Packages</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Chat" asp-action="Index">Chat với AI</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Booking" asp-action="Unpaid">Gói chưa thanh toán</a>
-                            </li>
+
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="feedbackDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Phản hồi
+                                <a class="nav-link dropdown-toggle fw-semibold text-dark" href="#" id="paymentPackagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Gói tập & Thanh toán
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="feedbackDropdown">
+                                <ul class="dropdown-menu shadow-sm border-0" aria-labelledby="paymentPackagesDropdown">
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Feedback" asp-action="Create">
-                                            Gửi phản hồi mới
+                                        <a class="dropdown-item py-2 px-3 text-dark" asp-controller="Packages" asp-action="Index">
+                                            <i class="bi bi-card-checklist me-2"></i>Đăng ký gói tập
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Feedback" asp-action="MyFeedbacks">
-                                            Phản hồi của tôi
+                                        <a class="dropdown-item py-2 px-3 text-dark" asp-controller="Booking" asp-action="Unpaid">
+                                            <i class="bi bi-wallet2 me-2"></i>Gói chưa thanh toán
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Chat" asp-action="Index">Chat với AI</a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle fw-semibold text-dark" href="#" id="feedbackDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Phản hồi
+                                </a>
+                                <ul class="dropdown-menu shadow-sm border-0" aria-labelledby="feedbackDropdown">
+                                    <li>
+                                        <a class="dropdown-item py-2 px-3 text-dark" asp-controller="Feedback" asp-action="Create">
+                                            <i class="bi bi-chat-square-text me-2"></i>Gửi phản hồi mới
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item py-2 px-3 text-dark" asp-controller="Feedback" asp-action="MyFeedbacks">
+                                            <i class="bi bi-list-check me-2"></i>Phản hồi của tôi
                                         </a>
                                     </li>
                                 </ul>
                             </li>
                         }
-                        @* <li class="nav-item dropdown">
-                            <a class="nav-link d-flex align-items-center gap-1" href="#" id="usersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-people-fill"></i> <!-- Bootstrap icon: you can change this -->
-                                Users
-                                <i class="bi bi-chevron-down"></i> <!-- Replace default caret -->
-                            </a>
-                            <ul class="dropdown-menu shadow rounded" aria-labelledby="usersDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">👥 All Users</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Create">➕ Add User</a></li>
-                            </ul>
-                        </li> *@
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         @if (User.Identity.IsAuthenticated)

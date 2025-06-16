@@ -8,8 +8,9 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-controller="User" asp-action="Staff">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -45,8 +46,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.StaffId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.StaffId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.StaffId">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.StaffId">Details</a>
             </td>
         </tr>
 }

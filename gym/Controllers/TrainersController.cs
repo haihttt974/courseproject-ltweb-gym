@@ -133,7 +133,7 @@ namespace gym.Controllers
                         await ImageFile.CopyToAsync(stream);
                     }
 
-                    trainer.Image = "/images/trainer/" + fileName;
+                    trainer.Image = "images/trainer/" + fileName;
                 }
                 else
                 {

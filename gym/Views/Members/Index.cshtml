@@ -2,14 +2,17 @@
 
 @{
     ViewData["Title"] = "Danh sách Hội viên";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = Context.User;
+    var isAdmin = user.IsInRole("Admin"); // hoặc kiểm tra roleId nếu bạn lưu claim roleId
+    Layout = isAdmin ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1 class="mb-4 text-center">Danh sách Hội viên</h1>
 
 <div class="text-end mb-4">
-    <a asp-action="Create" class="btn btn-primary">➕ Thêm Hội viên</a>
+    <a asp-controller="User" asp-action="Member" class="btn btn-primary">➕ Thêm Hội viên</a>
 </div>
+
 
 <!-- FORM LỌC -->
 <div class="card mb-4 border-primary shadow-sm">

@@ -1,7 +1,7 @@
 ﻿@model gym.Data.Package
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Chi tiết gói tập";
 
     if (User.IsInRole("Admin"))
     {
@@ -13,45 +13,47 @@
     }
 }
 
-<h1>Details</h1>
+<h2 class="mb-4 text-primary fw-bold">📄 Chi tiết gói tập</h2>
 
-<div>
-    <h4>Package</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DurationInDays)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DurationInDays)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-4 text-secondary fw-semibold">Tên gói</dt>
+            <dd class="col-sm-8">@Model.Name</dd>
+
+            <dt class="col-sm-4 text-secondary fw-semibold">Loại gói</dt>
+            <dd class="col-sm-8">@Model.Type</dd>
+
+            <dt class="col-sm-4 text-secondary fw-semibold">Giá</dt>
+            <dd class="col-sm-8">@String.Format("{0:N0} VNĐ", Model.Price)</dd>
+
+            <dt class="col-sm-4 text-secondary fw-semibold">Thời hạn</dt>
+            <dd class="col-sm-8">@Model.DurationInDays ngày</dd>
+
+            <dt class="col-sm-4 text-secondary fw-semibold">Mô tả</dt>
+            <dd class="col-sm-8">@Model.Description</dd>
+
+            <dt class="col-sm-4 text-secondary fw-semibold">Trạng thái</dt>
+            <dd class="col-sm-8">
+                @if (Model.IsActive)
+                {
+                    <span class="badge bg-success">Đang mở</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Đã đóng</span>
+                }
+            </dd>
+        </dl>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.PackageId">Edit</a> |
-    <a asp-action="Admin">Back to List</a>
+
+<div class="d-flex justify-content-between">
+    <a asp-action="Admin" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+    </a>
+
+    <a asp-action="Edit" asp-route-id="@Model.PackageId" class="btn btn-warning">
+        <i class="fas fa-pen-to-square me-1"></i> Sửa gói
+    </a>
 </div>
