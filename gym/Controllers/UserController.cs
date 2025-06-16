@@ -1,10 +1,12 @@
 ﻿// Controller: UserController.cs
-using Microsoft.AspNetCore.Mvc;
 using gym.Data;
 using gym.Services;
 using gym.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
+[Authorize(Roles = "Admin")]
 public class UserController : Controller
 {
     private readonly GymContext _context;

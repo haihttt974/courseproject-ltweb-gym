@@ -630,23 +630,10 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a asp-controller="Feedback" asp-action="List" class="nav-link @(currentController == "Feedback" ? "active" : "")">
-                                <i class="nav-icon fas fa-comments"></i>
-                                <p>Danh sách phản hồi</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a asp-controller="Report" asp-action="Revenue" class="nav-link @(currentController == "Report" ? "active" : "")">
-                                <i class="nav-icon fas fa-chart-line"></i>
-                                <p>Báo cáo</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item has-treeview @(isUsersController ? "menu-open" : "")">
-                            <a href="#" class="nav-link @(isUsersController ? "active" : "")">
-                                <i class="nav-icon fas fa-users-cog"></i>
+                        <!-- Thông báo -->
+                        <li class="nav-item has-treeview @(currentController == "Notifications" ? "menu-open" : "")">
+                            <a href="#" class="nav-link @(currentController == "Notifications" ? "active" : "")">
+                                <i class="nav-icon fas fa-bell"></i>
                                 <p>
                                     Thông báo
                                     <i class="right fas fa-angle-left"></i>
@@ -654,20 +641,34 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a asp-controller="Notifications" asp-action="NotificationsSent" class="nav-link @(currentAction == "Index" && isUsersController ? "active" : "")">
-                                        <i class="far fa-list-alt nav-icon"></i>
+                                    <a asp-controller="Notifications" asp-action="NotificationsSent" class="nav-link @(currentAction == "NotificationsSent" && currentController == "Notifications" ? "active" : "")">
+                                        <i class="far fa-paper-plane nav-icon"></i>
                                         <p>Thông báo đã gửi</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a asp-controller="Notifications" asp-action="Create" class="nav-link @(currentController == "Staffs" ? "active" : "")">
-                                        <i class="nav-icon fas fa-user-tie"></i>
+                                    <a asp-controller="Notifications" asp-action="Create" class="nav-link @(currentAction == "Create" && currentController == "Notifications" ? "active" : "")">
+                                        <i class="fas fa-plus-circle nav-icon"></i>
                                         <p>Tạo thông báo</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        
+
+                        <li class="nav-item">
+                            <a asp-controller="Feedback" asp-action="List" class="nav-link @(currentController == "Feedback" ? "active" : "")">
+                                <i class="nav-icon fas fa-comments"></i>
+                                <p>Danh sách phản hồi</p>
+                            </a>
+                        </li>
+
+                        <!-- Báo cáo -->
+                        <li class="nav-item">
+                            <a asp-controller="Report" asp-action="Revenue" class="nav-link @(currentController == "Report" ? "active" : "")">
+                                <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                                <p>Báo cáo</p>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
