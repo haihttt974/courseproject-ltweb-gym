@@ -34,8 +34,29 @@ namespace gym.Controllers
 
         public async Task<IActionResult> Admin()
         {
-            return View(await _context.Packages.ToListAsync());
+            var data = await _context.Packages.ToListAsync(); // dữ liệu mới nhất
+            return View(data);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePackageStatus(int id, string isActive)
+        {
+            if (!bool.TryParse(isActive, out bool status))
+                return BadRequest("Giá trị không hợp lệ.");
+
+            var pkg = new Package { PackageId = id }; // KHÔNG dùng FindAsync
+            _context.Attach(pkg);
+            pkg.IsActive = status;
+
+            // Đảm bảo chỉ update 1 field
+            _context.Entry(pkg).Property(p => p.IsActive).IsModified = true;
+
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine($"==> Package ID {id} cập nhật IsActive = {status}");
+            return Ok();
+        }
+
 
         // GET: Packages/Details/5
         public async Task<IActionResult> Details(int? id)
