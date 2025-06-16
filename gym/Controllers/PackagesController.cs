@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -93,7 +94,7 @@ namespace gym.Controllers
             {
                 _context.Add(package);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Admin));
             }
             return View(package);
         }
@@ -111,6 +112,12 @@ namespace gym.Controllers
             {
                 return NotFound();
             }
+
+            // Gửi chuỗi giá trị đã format cho input
+            ViewBag.PriceString = package.Price.HasValue
+                ? package.Price.Value.ToString("0.##", CultureInfo.InvariantCulture)
+                : "";
+
             return View(package);
         }
 
@@ -144,7 +151,7 @@ namespace gym.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Admin));
             }
             return View(package);
         }
