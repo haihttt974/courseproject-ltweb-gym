@@ -582,32 +582,30 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a asp-controller="Users" asp-action="Create" class="nav-link @(currentAction == "Create" && isUsersController ? "active" : "")">
-                                        <i class="far fa-plus-square nav-icon"></i>
-                                        <p>Thêm mới</p>
+                                    <a asp-controller="User" asp-action="Member" class="nav-link @(currentAction == "CreateMember" && isUsersController ? "active" : "")">
+                                        <i class="fas fa-user-plus nav-icon"></i>
+                                        <p>Thêm hội viên</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="User" asp-action="Staff" class="nav-link @(currentAction == "CreateStaff" && isUsersController ? "active" : "")">
+                                        <i class="fas fa-user-tie nav-icon"></i>
+                                        <p>Thêm nhân viên</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="User" asp-action="Trainer" class="nav-link @(currentAction == "CreateTrainer" && isUsersController ? "active" : "")">
+                                        <i class="fas fa-dumbbell nav-icon"></i>
+                                        <p>Thêm huấn luyện viên</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
 
                         <li class="nav-item">
-                            <a asp-controller="Account" asp-action="EditProfile" class="nav-link @(currentController == "Account" ? "active" : "")">
-                                <i class="nav-icon fas fa-user-edit"></i>
-                                <p>Trang cá nhân</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
                             <a asp-controller="Trainers" asp-action="Index" class="nav-link @(currentController == "Trainers" ? "active" : "")">
                                 <i class="nav-icon fas fa-user-shield"></i>
                                 <p>Huấn luyện viên</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a asp-controller="Packages" asp-action="Admin" class="nav-link @(currentController == "Packages" ? "active" : "")">
-                                <i class="nav-icon fas fa-box-open"></i>
-                                <p>Gói tập</p>
                             </a>
                         </li>
 
@@ -619,15 +617,29 @@
                         </li>
 
                         <li class="nav-item">
-                            <a asp-controller="Feedback" asp-action="List" class="nav-link @(currentController == "Staffs" ? "active" : "")">
-                                <i class="nav-icon fas fa-user-tie"></i>
+                            <a asp-controller="Members" asp-action="Index" class="nav-link @(currentController == "Members" ? "active" : "")">
+                                <i class="nav-icon fas fa-user-friends"></i>
+                                <p>Hội viên</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a asp-controller="Packages" asp-action="Admin" class="nav-link @(currentController == "Packages" ? "active" : "")">
+                                <i class="nav-icon fas fa-box-open"></i>
+                                <p>Gói tập</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a asp-controller="Feedback" asp-action="List" class="nav-link @(currentController == "Feedback" ? "active" : "")">
+                                <i class="nav-icon fas fa-comments"></i>
                                 <p>Danh sách phản hồi</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a asp-controller="Report" asp-action="Revenue" class="nav-link @(currentController == "Staffs" ? "active" : "")">
-                                <i class="nav-icon fas fa-user-tie"></i>
+                            <a asp-controller="Report" asp-action="Revenue" class="nav-link @(currentController == "Report" ? "active" : "")">
+                                <i class="nav-icon fas fa-chart-line"></i>
                                 <p>Báo cáo</p>
                             </a>
                         </li>
